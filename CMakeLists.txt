@@ -8,10 +8,9 @@ set(CVDRONE_LIB_PATH /opt/cvdrone/lib)
 
 add_executable(tesis-ardrone src/video.cpp src/environment.cpp main.cpp)
 
-install(TARGETS tesis-ardrone RUNTIME DESTINATION bin)
+# install(TARGETS tesis-ardrone RUNTIME DESTINATION bin)
 
 include_directories(includes/ 
-                    includes/core/
                     /usr/local/include 
                     /opt/cvdrone/include 
                     /opt/boost_1_57_0/include 
