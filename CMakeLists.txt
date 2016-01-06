@@ -36,10 +36,12 @@ add_executable(tesis-ardrone main.cpp
 find_library(PTHREAD_LIB NAMES pthread)
 
 # opencv
-find_library(OPENCV_CORE_LIB NAMES opencv_core PATHS ${USER_LIB_PATH})
-find_library(OPENCV_HIGHGUI_LIB NAMES opencv_highgui PATHS ${USER_LIB_PATH})
-find_library(OPENCV_IMGPROC_LIB NAMES opencv_imgproc PATHS ${USER_LIB_PATH})
-find_library(OPENCV_VIDEO_LIB NAMES opencv_video PATHS ${USER_LIB_PATH})
+# find_library(OPENCV_CORE_LIB NAMES opencv_core PATHS ${USER_LIB_PATH})
+# find_library(OPENCV_HIGHGUI_LIB NAMES opencv_highgui PATHS ${USER_LIB_PATH})
+# find_library(OPENCV_IMGPROC_LIB NAMES opencv_imgproc PATHS ${USER_LIB_PATH})
+# find_library(OPENCV_VIDEO_LIB NAMES opencv_videoio PATHS ${USER_LIB_PATH})
+
+find_package( OpenCV REQUIRED )
 
 
 # boost
@@ -58,10 +60,7 @@ find_library(AVCODEC_LIB NAMES avcodec PATHS ${FFMPEG_LIB_PATH})
 find_library(AVUTIL_LIB NAMES avutil PATHS ${FFMPEG_LIB_PATH})
 
 target_link_libraries(tesis-ardrone ${PTHREAD_LIB} 
-                                    ${OPENCV_CORE_LIB} 
-                                    ${OPENCV_HIGHGUI_LIB} 
-                                    ${OPENCV_IMGPROC_LIB} 
-                                    ${OPENCV_VIDEO_LIB}
+                                    ${OpenCV_LIBS}
                                     ${BOOST_THREAD_LIB} 
                                     ${BOOST_SYSTEM_LIB} 
                                     ${CVDRONE_LIB} 

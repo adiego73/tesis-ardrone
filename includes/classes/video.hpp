@@ -1,11 +1,9 @@
 #ifndef VIDEO_HPP
 #define VIDEO_HPP
 
-#include <opencv.hpp>
-#include <opencv2/video.hpp>
 #include <assert.h>
 
-# include "structures.hpp"
+#include "structures.hpp"
 
 namespace tesis
 {
@@ -15,11 +13,11 @@ class Video
 
     public:
         std::vector<Point> transformToBlackAndWhite ( cv::Mat &image, const Color color );
-        std::vector<std::vector<Point>> transformToBlackAndWhite ( cv::Mat &image, const std::vector<Color> color, int length);
+        std::vector<std::vector<Point>> transformToBlackAndWhite ( cv::Mat &image, const std::vector<Color> color, int length );
         cv::Mat getFrame();
         cv::Size getFrameSize();
-        
-        Video(int camera);
+
+        Video ( int camera );
         ~Video();
 
     private:

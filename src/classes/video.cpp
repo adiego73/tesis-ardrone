@@ -4,6 +4,9 @@ using namespace tesis;
 
 Video::Video ( int camera ) : cap(camera)
 {
+    if (!this->cap.isOpened())
+        return;
+        
     this->cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);
     this->cap.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
     this->img_size.height = this->cap.get(CV_CAP_PROP_FRAME_HEIGHT);
@@ -78,3 +81,4 @@ std::vector< Point > Video::transformToBlackAndWhite ( cv::Mat &image, const Col
 {
 
 }
+
