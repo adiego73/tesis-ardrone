@@ -3,18 +3,32 @@
 
 #include <vector>
 #include <iostream>
+#include <string>
+#include <opencv.hpp>
+#include <ardrone.h>
 
-#include <opencv2/core.hpp>
-#include <opencv2/core/mat.hpp>
+#include "config/configutarion.hpp"
 
-namespace tesis {
+namespace tesis
+{
 
-typedef struct {
-  float x;
-  float y;
-  float z;
+#ifndef MAX_ANGLE
+#define MAX_ANGLE 180
+#endif
+
+typedef struct
+{
+    float x;
+    float y;
+    float z;
 } Point;
 
+typedef struct
+{
+    float vx;
+    float vy;
+    float vz;
+} Velocity;
 
 
 
