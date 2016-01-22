@@ -1,0 +1,63 @@
+{
+    "safe_spot": [
+        {
+            "Hue": {
+                "min": 111,
+                "max": 1111
+            },
+            "Saturation": {
+                "min": 1111,
+                "max": 111
+            },
+            "Value": {
+                "min": 111,
+                "max": 11111
+            }
+        },
+        {
+            "Hue": {
+                "min": 222,
+                "max": 222
+            },
+            "Saturation": {
+                "min": 222,
+                "max": 222
+            },
+            "Value": {
+                "min": 222,
+                "max": 222
+            }
+        },
+        {
+            "Hue": {
+                "min": 333,
+                "max": 333
+            },
+            "Saturation": {
+                "min": 333,
+                "max": 3333
+            },
+            "Value": {
+                "min": 3333,
+                "max": 333
+            }
+        }
+    ],
+    "unsafe_spot": [],
+    "robot_id": {
+        "Hue": {
+            "min": 55555,
+            "max": 5555
+        },
+        "Saturation": {
+            "min": 5555,
+            "max": 555
+        },
+        "Value": {
+            "min": 55555,
+            "max": 55555
+        }
+    },
+    "camera_height": 2.5,
+    "camera_number": 1
+}

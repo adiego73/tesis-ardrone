@@ -11,14 +11,20 @@ namespace tesis
 class Environment
 {
     public:
-        Environment();
+        Environment(std::string config_path);
         ~Environment();
 
     private:
+        EnvironmentConfig env_config;
+        RobotConfig robot_config;
+        
         std::vector<Point> safe_spots;
         std::vector<Point> unsafe_spots;
         std::vector<Point> robot_positions;
-        Video *camera_video;
+        
+        boost::shared_ptr<Video> video_camera;
+        
+        float camera_height;
         bool is_visible;
 };
 

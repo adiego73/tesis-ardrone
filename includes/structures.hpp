@@ -4,6 +4,9 @@
 #include <vector>
 #include <iostream>
 #include <string>
+
+#include <boost/smart_ptr.hpp>
+
 #include <opencv.hpp>
 #include <ardrone.h>
 

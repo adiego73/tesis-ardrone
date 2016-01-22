@@ -34,10 +34,14 @@ typedef struct
     PIDValues Yaw;
 } PIDConfig;
 
+
 typedef struct
 {
     std::vector< Color > safe_spot;
     std::vector< Color > unsafe_spot;
+    Color robot_id;
+    float camera_height;
+    int camera_number;
 } EnvironmentConfig;
 
 typedef struct
