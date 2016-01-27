@@ -1,4 +1,4 @@
-#include "classes/configuration_manager.hpp"
+#include "classes/environment_configuration.hpp"
 
 using namespace tesis;
 using namespace boost;
@@ -77,24 +77,4 @@ void EnvironmentConfiguration::parse()
         std::cerr << e.what() << std::endl;
     }
 }
-
-RobotConfig RobotConfiguration::get()
-{
-    return this->configuration;
-}
-
-void RobotConfiguration::parse()
-{
-    RobotConfig c;
-    c.address = "192.168.1.1";
-
-    this->configuration = c;
-}
-
-RobotConfiguration::RobotConfiguration( std::string path ) : path( path )
-{
-    this->parse();
-}
-
-
 

@@ -2,7 +2,7 @@
 #define ENVIRONMENT_HPP
 
 #include "structures.hpp"
-#include "classes/configuration_manager.hpp"
+#include "classes/environment_configuration.hpp"
 #include "classes/video.hpp"
 
 namespace tesis
@@ -19,7 +19,6 @@ class Environment
 
     private:
         EnvironmentConfig env_config;
-//         RobotConfig robot_config;
         
         std::vector<Point> safe_spots;
         std::vector<Point> unsafe_spots;

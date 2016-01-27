@@ -24,23 +24,16 @@ add_executable(tesis-ardrone main.cpp
                              src/core/camera_thread.cpp
                              src/core/robot_thread.cpp
                              src/core/gui_thread.cpp
-                            
-                             src/classes/pid.cpp 
-                             src/classes/pid_yaw.cpp
+                        
                              src/classes/video.cpp 
                              src/classes/environment.cpp 
-                             src/classes/configuration_manager.cpp
-                             )                           
+                             src/classes/environment_configuration.cpp
+                )
 
 # pthread
 find_library(PTHREAD_LIB NAMES pthread)
 
 # opencv
-# find_library(OPENCV_CORE_LIB NAMES opencv_core PATHS ${USER_LIB_PATH})
-# find_library(OPENCV_HIGHGUI_LIB NAMES opencv_highgui PATHS ${USER_LIB_PATH})
-# find_library(OPENCV_IMGPROC_LIB NAMES opencv_imgproc PATHS ${USER_LIB_PATH})
-# find_library(OPENCV_VIDEO_LIB NAMES opencv_videoio PATHS ${USER_LIB_PATH})
-
 find_package( OpenCV REQUIRED )
 
 

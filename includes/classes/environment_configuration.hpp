@@ -1,9 +1,9 @@
-#ifndef CONFIGURATIONMANAGER_H
-#define CONFIGURATIONMANAGER_H
+#ifndef ENVIRONMENT_CONFIGURATION_H
+# define ENVIRONMENT_CONFIGURATION_H
 
 #include "config/configutarion.hpp"
 
-# include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
 
@@ -32,22 +32,7 @@ class EnvironmentConfiguration
         void parse();
 };
 
-class RobotConfiguration
-{
-    public:
-        RobotConfiguration( std::string path );
-        RobotConfig get();
-
-    private:
-        RobotConfig configuration;
-        std::string path;
-
-        void parse();
-
 };
-
-
-};
-#endif // CONFIGURATIONMANAGER_H
+#endif                                                      // ENVIRONMENT_CONFIGURATION_H
 
 

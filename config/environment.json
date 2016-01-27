@@ -2,62 +2,76 @@
     "safe_spot": [
         {
             "Hue": {
-                "min": 111,
-                "max": 1111
+                "min": 0,
+                "max": 81
             },
             "Saturation": {
-                "min": 1111,
-                "max": 111
+                "min": 91,
+                "max": 127
             },
             "Value": {
-                "min": 111,
-                "max": 11111
-            }
-        },
-	        {
-            "Hue": {
-                "min": 222,
-                "max": 222
-            },
-            "Saturation": {
-                "min": 222,
-                "max": 222
-            },
-            "Value": {
-                "min": 222,
-                "max": 222
+                "min": 185,
+                "max": 195
             }
         },
         {
             "Hue": {
-                "min": 333,
-                "max": 333
+                "min": 83,
+                "max": 101
             },
             "Saturation": {
-                "min": 333,
-                "max": 3333
+                "min": 101,
+                "max": 149
             },
             "Value": {
-                "min": 3333,
-                "max": 333
+                "min": 101,
+                "max": 108
+            }
+        },
+        {
+            "Hue": {
+                "min": 86,
+                "max": 125
+            },
+            "Saturation": {
+                "min": 101,
+                "max": 255
+            },
+            "Value": {
+                "min": 145,
+                "max": 232
+            }
+        },
+        {
+            "Hue": {
+                "min": 10,
+                "max": 21
+            },
+            "Saturation": {
+                "min": 55,
+                "max": 255
+            },
+            "Value": {
+                "min": 145,
+                "max": 233
             }
         }
     ],
     "unsafe_spot": [],
     "robot_id": {
         "Hue": {
-            "min": 55555,
-            "max": 5555
+            "min": 135,
+            "max": 179
         },
         "Saturation": {
-            "min": 5555,
-            "max": 555
+            "min": 50,
+            "max": 255
         },
         "Value": {
-            "min": 55555,
-            "max": 55555
+            "min": 80,
+            "max": 255
         }
     },
-    "camera_height": 2.5,
-    "camera_number": 1
+    "camera_height": 3000.0,
+    "camera_number": 0
 }
