@@ -2,6 +2,7 @@
 #define VIDEO_HPP
 
 #include "structures.hpp"
+#include <math.h>
 
 namespace tesis
 {
@@ -10,8 +11,7 @@ class Video
 {
 
     public:
-        std::vector<Point> transformToBlackAndWhite( cv::Mat &image, const Color color );
-        std::vector<std::vector<Point>> transformToBlackAndWhite( cv::Mat &image, const std::vector<Color> color, int length );
+        Point trackColor(Color color);
         cv::Mat getFrame();
         cv::Size getFrameSize();
 
@@ -23,8 +23,6 @@ class Video
         cv::Mat frame;
         cv::Size img_size;
         int fps;
-        bool isSimilarColor( cv::Scalar scalar, Color color );
-        bool _isSimilarColor( cv::Scalar scalar, Color color );
 };
 
 

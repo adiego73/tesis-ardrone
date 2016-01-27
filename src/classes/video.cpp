@@ -8,7 +8,7 @@ Video::Video( int camera ) : cap( camera )
     {
         std::ostringstream message;
         message << "The camera " << camera << " couldn't be opened";
-        throw std::invalid_argument(message.str());
+        throw std::invalid_argument( message.str() );
     }
 
     this->cap.set( CV_CAP_PROP_FRAME_WIDTH, 640 );
@@ -37,111 +37,69 @@ cv::Size Video::getFrameSize()
     cv::Size size;
     size.height = frame.rows;
     size.width = frame.cols;
-    
+
     return size;
 }
 
 
-std::vector< std::vector< Point > > Video::transformToBlackAndWhite( cv::Mat &image, const std::vector< tesis::Color > color, int length )
+Point Video::trackColor( Color color )
 {
-    std::vector<std::vector<Point>> puntos( length );
-    // accept only char type matrices
-    CV_Assert( image.depth() != sizeof( uchar ) );
+    Point pos;
+    cv::Size imageSize = this->getFrameSize();
+    cv::Mat frame = this->getFrame();
+    
+    cv::Mat frame_th = cv::Mat( imageSize, CV_8UC1 );
+    cv::Mat frame_th2 = cv::Mat( imageSize, CV_8UC1 );
+    cv::Mat img_2 = cv::Mat( imageSize, CV_8UC3 );
 
-    switch( image.channels() )
+    cv::Mat morphKernel = cv::getStructuringElement( cv::MORPH_RECT, cv::Size( 5, 5 ), cv::Point( 1, 1 ) );
+
+    cv::Scalar thresholdMin;
+    cv::Scalar thresholdMax;
+    
+    thresholdMin.val[0] = color.Hue.min;
+    thresholdMin.val[1] = color.Saturation.min;
+    thresholdMin.val[2] = color.Value.min;
+    
+    thresholdMax.val[0] = color.Hue.max;
+    thresholdMax.val[1] = color.Saturation.max;
+    thresholdMax.val[2] = color.Value.max;
+    
+    cv::cvtColor( frame, img_2, CV_BGR2HSV );
+    cv::inRange( img_2,thresholdMin, thresholdMax , frame_th );
+
+    cv::morphologyEx( frame_th, frame_th2, CV_MOP_OPEN, morphKernel );
+
+    cv::Moments moments_1;
+    cv::Moments moments_2;
+
+    double moment10;
+    double moment01;
+    double area, area2, r;
+
+    moments_1 = cv::moments( frame_th2, 1 );
+
+    moment10 = moments_1.m10;
+    moment01 = moments_1.m01;
+    area2 = moments_1.m00;
+
+
+    r = sqrt( area2 / M_PI );
+
+    if( area2 > 3 )
     {
-        case 3:
-            cv::MatIterator_<cv::Vec3b> it, end;
-
-            for( it = image.begin<cv::Vec3b>(), end = image.end<cv::Vec3b>(); it != end; ++it )
-            {
-                cv::Scalar scalar( ( *it ) [0], ( *it ) [1], ( *it ) [2] );
-                char f = 255;
-
-                for( int i = 0; i < length; i++ )
-                {
-                    // TODO reemplazar esto
-                    if( this->isSimilarColor( scalar, color[i] ) )
-                    {
-                        Point p;
-                        p.x = it.pos().x;
-                        p.y = it.pos().y;
-
-                        puntos[i].push_back( p );
-
-                        f = i * 100;
-                    }
-                }
-
-                ( *it ) [0] = f;
-                ( *it ) [1] = f;
-                ( *it ) [2] = f;
-
-            }
-
-            break;
-
+        pos.x = moment10 / area2;
+        pos.y = moment01 / area2;
+    }
+    else
+    {
+        pos.x = -1;
+        pos.y = -1;
     }
 
-    return puntos;
+    return pos;
 }
 
-std::vector< Point > Video::transformToBlackAndWhite( cv::Mat &image, const Color color )
-{
-    std::vector<Point> puntos;
-    // accept only char type matrices
-    CV_Assert( image.depth() != sizeof( uchar ) );
-
-    switch( image.channels() )
-    {
-        case 3:
-            cv::MatIterator_<cv::Vec3b> it, end;
-
-            for( it = image.begin<cv::Vec3b>(), end = image.end<cv::Vec3b>(); it != end; ++it )
-            {
-                cv::Scalar scalar( ( *it ) [0], ( *it ) [1], ( *it ) [2] );
-                // va a ser 255 * 1 ó 255 * 0.
-                uchar f = 255 * ! this->isSimilarColor( scalar, color );
-
-                ( *it ) [0] = f;
-                ( *it ) [1] = f;
-                ( *it ) [2] = f;
-
-                if( f == 0 )
-                {
-                    Point p;
-                    p.x = it.pos().x;
-                    p.y = it.pos().y;
-                    puntos.push_back( p );
-                }
-            }
-
-            break;
-    }
-
-    return puntos;
-}
-
-bool Video::isSimilarColor( cv::Scalar scalar, Color color )
-{
-    return ( scalar.val[0] >= color.Hue.min && scalar.val[0] <= color.Hue.max
-             && scalar.val[1] >= color.Saturation.min && scalar.val[1] <= color.Saturation.max
-             && scalar.val[2] >= color.Value.min && scalar.val[2] <= color.Value.max );
-}
-
-bool Video::_isSimilarColor( cv::Scalar scalar, Color color )
-{
-    return (
-               ( ( scalar.val[0] < 9 || ( scalar.val[0] > color.Hue.min && scalar.val[0] < color.Hue.max ) )
-                 && scalar.val[1] > color.Saturation.min && scalar.val[1] < color.Saturation.max
-                 && scalar.val[2] > color.Value.min && scalar.val[2] < color.Value.max ) ||
-               ( ( scalar.val[0] < 9 || ( scalar.val[0] > color.Hue.min && scalar.val[0] < color.Hue.max ) )
-                 && scalar.val[1] > color.Saturation.min + 100
-                 && scalar.val[1] < color.Saturation.max
-                 && scalar.val[2] > color.Value.min - 40
-                 && scalar.val[2] < color.Value.max )
-           );
-}
 
 
 

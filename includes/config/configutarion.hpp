@@ -7,48 +7,48 @@
 namespace tesis
 {
 
-typedef struct
+struct Range
 {
     int min;
     int max;
-} Range;
+};
 
-typedef struct
+struct Color
 {
     Range Hue;
     Range Saturation;
     Range Value;
-} Color ;
+};
 
-typedef struct
+struct PIDValues
 {
     double Kp;
     double Kd;
     double Ki;
-} PIDValues;
+};
 
-typedef struct
+struct PIDConfig
 {
     PIDValues Roll;
     PIDValues Pitch;
     PIDValues Yaw;
-} PIDConfig;
+};
 
 
-typedef struct
+struct EnvironmentConfig
 {
     std::vector< Color > safe_spot;
     std::vector< Color > unsafe_spot;
     Color robot_id;
     float camera_height;
     int camera_number;
-} EnvironmentConfig;
+};
 
-typedef struct
+struct RobotConfig
 {
     PIDConfig PID;
     std::string address;
-} RobotConfig;
+};
 
 };
 
