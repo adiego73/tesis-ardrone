@@ -1,6 +1,8 @@
 #include "core/threads.hpp"
 
-void gui_thread()
+using namespace tesis;
+
+void gui_thread( EnvironmentConfig env_config, boost::shared_ptr<MessageServer> messageServer )
 {
 
 }

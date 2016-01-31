@@ -24,6 +24,7 @@ add_executable(tesis-ardrone main.cpp
                              src/core/camera_thread.cpp
                              src/core/robot_thread.cpp
                              src/core/gui_thread.cpp
+                             src/core/message/message_server.cpp
                         
                              src/classes/video.cpp 
                              src/classes/environment.cpp 
@@ -65,3 +66,4 @@ target_link_libraries(tesis-ardrone ${PTHREAD_LIB}
                                     ${AVCODEC_LIB} 
                                     ${PTHREAD_LIB}
                                     )                                   
+add_subdirectory(includes/core/message)

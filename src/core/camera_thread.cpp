@@ -1,6 +1,11 @@
 #include "core/threads.hpp"
 
-void camera_thread()
+using namespace tesis;
+
+void camera_thread( EnvironmentConfig env_config, boost::shared_ptr<MessageServer> messageServer )
 {
+    
+    
+    
     
 }

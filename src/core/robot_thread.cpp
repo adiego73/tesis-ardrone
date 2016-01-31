@@ -1,6 +1,8 @@
 #include "core/threads.hpp"
 
-void robot_thread()
+using namespace tesis;
+
+void robot_thread( EnvironmentConfig env_config, boost::shared_ptr<MessageServer> messageServer )
 {
 
 }

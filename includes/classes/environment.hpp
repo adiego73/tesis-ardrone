@@ -13,6 +13,7 @@ class Environment
     public:
         Point getRobotPosition();
         std::vector<Point> getDestinations();
+        bool isRobotVisible();
         
         Environment(std::string config_path);
         ~Environment();
@@ -27,7 +28,7 @@ class Environment
         boost::shared_ptr<Video> video_camera;
         
         float camera_height;
-        bool is_visible;
+        Point robot_position;
 };
 
 

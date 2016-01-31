@@ -1,5 +1,5 @@
 #ifndef ENVIRONMENT_CONFIGURATION_H
-# define ENVIRONMENT_CONFIGURATION_H
+#define ENVIRONMENT_CONFIGURATION_H
 
 #include "config/configutarion.hpp"
 

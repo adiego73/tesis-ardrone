@@ -32,11 +32,29 @@ std::vector< Point > Environment::getDestinations()
 Point Environment::getRobotPosition()
 {
     Point position = this->video_camera->trackColor( this->env_config.robot_id );
-    
-    this->is_visible = ( position.x != -1 )  ?  true : false;
-    
+
+    this->robot_position = position;
+
+    if( this->isRobotVisible() )
+    {
+        //  it keeps the last 10 positions of the robot;
+        if( this->robot_positions.size() >= 10 )
+        {
+            //  removing first element
+            this->robot_positions.erase( this->robot_positions.begin() );
+        }
+        // add element to the end
+        this->robot_positions.push_back( position );
+    }
+
     return position;
 }
+
+bool Environment::isRobotVisible()
+{
+    return ( this->robot_position.x != -1 );
+}
+
 
 Environment::~Environment()
 {

@@ -72,6 +72,6 @@
             "max": 255
         }
     },
-    "camera_height": 3000.0,
+    "camera_height": 3,
     "camera_number": 0
 }
