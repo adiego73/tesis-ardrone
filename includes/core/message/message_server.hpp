@@ -16,6 +16,7 @@ class MessageServer
         void announce( std::string topic );
         void publish( std::string topic, std::string message );
         std::string get( std::string topic );
+        std::string get( std::string topic, std::string default_value);
 
     private:
         std::map<std::string, std::string> topic_map;

@@ -19,16 +19,13 @@ int main( int argc, char** argv )
         return 1;
     }
 
-    EnvironmentConfiguration env_config( argv[1] );
-    EnvironmentConfig config = env_config.get();
-
     boost::shared_ptr<MessageServer> msg_server( new MessageServer() );
 
     boost::thread_group threads;
 
-    threads.create_thread( boost::bind( gui_thread, config, msg_server ) );
-    threads.create_thread( boost::bind( camera_thread, config, msg_server ) );
-    threads.create_thread( boost::bind( robot_thread, config, msg_server ) );
+    threads.create_thread( boost::bind( gui_thread, msg_server ) );
+    threads.create_thread( boost::bind( camera_thread, argv[1], msg_server ) );
+    threads.create_thread( boost::bind( robot_thread, argv[1], msg_server ) );
 
     threads.join_all();
 

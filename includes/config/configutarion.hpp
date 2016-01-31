@@ -20,19 +20,19 @@ struct Color
     Range Value;
 };
 
-struct PIDValues
-{
-    double Kp;
-    double Kd;
-    double Ki;
-};
-
-struct PIDConfig
-{
-    PIDValues Roll;
-    PIDValues Pitch;
-    PIDValues Yaw;
-};
+// struct PIDValues
+// {
+//     double Kp;
+//     double Kd;
+//     double Ki;
+// };
+// 
+// struct PIDConfig
+// {
+//     PIDValues Roll;
+//     PIDValues Pitch;
+//     PIDValues Yaw;
+// };
 
 
 struct EnvironmentConfig
@@ -42,12 +42,6 @@ struct EnvironmentConfig
     Color robot_id;
     float camera_height;
     int camera_number;
-};
-
-struct RobotConfig
-{
-    PIDConfig PID;
-    std::string address;
 };
 
 };

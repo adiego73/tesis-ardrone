@@ -2,7 +2,7 @@
 
 using namespace tesis;
 
-void gui_thread( EnvironmentConfig env_config, boost::shared_ptr<MessageServer> messageServer )
+void gui_thread( boost::shared_ptr<MessageServer> messageServer )
 {
 
 }

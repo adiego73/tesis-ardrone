@@ -2,7 +2,7 @@
 
 using namespace tesis;
 
-void robot_thread( EnvironmentConfig env_config, boost::shared_ptr<MessageServer> messageServer )
+void robot_thread( std::string robot_config_path, boost::shared_ptr<MessageServer> messageServer )
 {
 
 }
