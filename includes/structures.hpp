@@ -8,7 +8,6 @@
 #include <boost/smart_ptr.hpp>
 
 #include <opencv.hpp>
-#include <ardrone.h>
 
 #include "config/configutarion.hpp"
 
@@ -25,15 +24,6 @@ typedef struct
     float y;
     float z;
 } Point;
-
-typedef struct
-{
-    float vx;
-    float vy;
-    float vz;
-} Velocity;
-
-
 
 
 };

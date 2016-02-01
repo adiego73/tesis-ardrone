@@ -33,20 +33,24 @@ cv::Mat Video::getFrame()
 
 cv::Size Video::getFrameSize()
 {
-    cv::Mat frame = this->getFrame();
-    cv::Size size;
-    size.height = frame.rows;
-    size.width = frame.cols;
-
-    return size;
+    return this->img_size;
 }
 
+float Video::getFrameHeight()
+{
+    return this->getFrameSize().height;
+}
+
+float Video::getFrameWidth()
+{
+    return this->getFrameSize().width;
+}
 
 Point Video::trackColor( Color color )
 {
     Point pos;
-    cv::Size imageSize = this->getFrameSize();
     cv::Mat frame = this->getFrame();
+    cv::Size imageSize = this->getFrameSize();
     
     cv::Mat frame_th = cv::Mat( imageSize, CV_8UC1 );
     cv::Mat frame_th2 = cv::Mat( imageSize, CV_8UC1 );

@@ -1,7 +1,11 @@
 #ifndef ENVIRONMENT_HPP
 #define ENVIRONMENT_HPP
 
+#include <boost/thread.hpp>
+
+
 #include "structures.hpp"
+#include "util/util.hpp"
 #include "classes/environment_configuration.hpp"
 #include "classes/video.hpp"
 
@@ -14,6 +18,7 @@ class Environment
         Point getRobotPosition();
         std::vector<Point> getDestinations();
         bool isRobotVisible();
+        Point getRobotPostionNormalized(float robot_altitude);
         
         Environment(std::string config_path);
         ~Environment();

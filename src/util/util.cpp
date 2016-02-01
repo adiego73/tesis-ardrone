@@ -67,6 +67,7 @@ int Util::mt_to_px( float mt, cv::Size img_size )
     return -1;
 }
 
+// TODO terminar esto.
 Point Util::px_to_mt( Point pt, cv::Size img_size )
 {
     return Point();

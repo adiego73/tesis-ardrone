@@ -20,11 +20,11 @@ class Util
         static float distance( Point pt, Point pt2 );
         static cv::Point to_cv_point( Point pt );
         static Point get_xy_distance( int dist, float deg );
-        static Point px_to_mt( Point pt, cv::Size img_size );
+        static Point px_to_mt( const Point pt, const cv::Size img_size );
         static int mt_to_px( float mt, cv::Size img_size );
         static Point mt_to_px( Point pt, cv::Size img_size );
 
-//     private:
+    private:
         Util();
         ~Util();
 };

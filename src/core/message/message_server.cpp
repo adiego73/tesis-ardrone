@@ -50,6 +50,6 @@ void MessageServer::publish( std::string topic, std::string message )
     else
     {
         std::string ex_msg = "The topic '" +topic+ "' does not exist. Announce it before publish a message";
-        throw std::exception(ex_msg);
+        throw std::invalid_argument(ex_msg);
     }
 }

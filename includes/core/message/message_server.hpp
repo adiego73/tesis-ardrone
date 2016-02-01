@@ -1,7 +1,9 @@
 #ifndef MESSAGESERVER_H
 #define MESSAGESERVER_H
 
+#include <stdexcept>
 #include <map>
+
 #include <boost/thread.hpp>
 
 namespace tesis

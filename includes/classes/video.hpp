@@ -14,6 +14,8 @@ class Video
         Point trackColor(Color color);
         cv::Mat getFrame();
         cv::Size getFrameSize();
+        float getFrameWidth();
+        float getFrameHeight();
 
         Video( int camera );
         ~Video();

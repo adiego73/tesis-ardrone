@@ -4,22 +4,64 @@ using namespace tesis;
 
 void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer> messageServer )
 {
-    Environment env(env_config_path);
-    
+    Environment env( env_config_path );
+
     bool quit = false;
-    
-    messageServer->announce("camera/robot_position");
-    messageServer->announce("camera/next_destination");
-    messageServer->announce("camera/destinations");
-    
-    while (!quit)
+
+    messageServer->announce( "camera/robot_position/x" );
+    messageServer->announce( "camera/robot_position/y" );
+    messageServer->announce( "camera/robot_position/z" );
+    messageServer->announce( "camera/destination/x" );
+    messageServer->announce( "camera/destination/y" );
+    messageServer->announce( "camera/robot_found" );
+
+    std::vector<Point> destinations = env.getDestinations();
+    int destination_index = 0;
+
+    while( !quit )
     {
-        if (env.isRobotVisible())
+        // El robot debe mandar su altura cada tanto.
+        std::string altitude_msg = messageServer->get( "robot/altitude", "0" );
+        float robot_altitude = std::stof( altitude_msg );
+
+        Point robot_position = env.getRobotPostionNormalized( robot_altitude );
+
+        messageServer->publish( "camera/robot_position/x", std::to_string( robot_position.x ) );
+        messageServer->publish( "camera/robot_position/y", std::to_string( robot_position.y ) );
+        messageServer->publish( "camera/robot_position/z", std::to_string( robot_altitude ) );
+
+        if( env.isRobotVisible() )
         {
-            std::string altitude_msg = messageServer->get("robot/altitude", "0");
-            float robot_altitude = std::stof(altitude_msg);
+            messageServer->publish( "camera/robot_found", "true" );
         }
-        
-    }    
-    
+        else
+        {
+            messageServer->publish( "camera/robot_found", "false" );
+        }
+
+        // TODO lo primero que tiene que hacer el robot es pedir el proximo destino.
+        bool go_next_destination;
+        std::string go_next_destination_str = messageServer->get( "robot/go_next_destination", "false" );
+        std::istringstream( go_next_destination_str ) >> std::boolalpha >> go_next_destination;
+
+        if( go_next_destination )
+        {
+            if( destination_index >= destinations.size() )
+            {
+                destination_index = 0;
+            }
+
+            Point next_destination = destinations[destination_index];
+
+            destination_index++;
+
+            messageServer->publish( "camera/destination/x", std::to_string( next_destination.x ) );
+            messageServer->publish( "camera/destination/y", std::to_string( next_destination.y ) );
+        }
+
+        std::string finish_msg = messageServer->get( "gui/finish", "false" );
+        std::istringstream( finish_msg ) >> std::boolalpha >> quit;
+
+    }
+
 }

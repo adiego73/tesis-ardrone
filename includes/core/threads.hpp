@@ -1,8 +1,12 @@
 #ifndef THREADS_HPP
 #define THREADS_HPP
 
+#include <string>
+#include <sstream>
+
 #include <boost/smart_ptr.hpp>
 #include <boost/thread.hpp>
+#include <boost/format.hpp>
 
 #include "classes/environment.hpp"
 #include "config/configutarion.hpp"
