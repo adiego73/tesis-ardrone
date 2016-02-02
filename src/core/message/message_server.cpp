@@ -28,7 +28,8 @@ std::string MessageServer::get( std::string topic, std::string default_value )
 {
     boost::lock_guard<boost::mutex> lock( this->msg_mutex );
 
-    if( this->topic_map.count( topic ) > 0 )
+    //  if topic doesn't exist or the message is not "" (empty)
+    if( this->topic_map.count( topic ) > 0 && this->topic_map[topic].length() > 0 )
     {
         return this->topic_map[topic];
     }
@@ -37,7 +38,6 @@ std::string MessageServer::get( std::string topic, std::string default_value )
         return default_value;
     }
 }
-
 
 void MessageServer::publish( std::string topic, std::string message )
 {
@@ -49,7 +49,8 @@ void MessageServer::publish( std::string topic, std::string message )
     }
     else
     {
-        std::string ex_msg = "The topic '" +topic+ "' does not exist. Announce it before publish a message";
-        throw std::invalid_argument(ex_msg);
+        std::string ex_msg = "The topic '" + topic + "' does not exist. Announce it before publish a message";
+        throw std::invalid_argument( ex_msg );
     }
 }
+

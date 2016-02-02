@@ -24,6 +24,7 @@ add_executable(tesis-ardrone main.cpp
                              src/core/camera_thread.cpp
                              src/core/robot_thread.cpp
                              src/core/gui_thread.cpp
+                             src/core/message_service_thread.cpp
                              src/core/message/message_server.cpp
                             
                              src/util/util.cpp
