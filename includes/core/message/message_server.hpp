@@ -25,7 +25,7 @@ class MessageServer
         std::string get( std::string topic, std::string default_value );
         void runServer();
 
-        static const int MESSAGE_SERVER_PORT_NO = 9711;
+        static const int MESSAGE_SERVER_PORT_NO = 9090;
     private:
         std::map<std::string, std::string> topic_map;
         boost::mutex msg_mutex;

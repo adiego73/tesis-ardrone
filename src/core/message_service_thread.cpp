@@ -7,33 +7,37 @@ std::vector< std::string > splitRequest( char delimiter, std::string request_mes
 void message_service_thread( boost::shared_ptr<MessageServer> messageServer )
 {
     bool quit = false;
-    boost::asio::io_service io_service;
-    boost::asio::ip::tcp::acceptor acceptor( io_service, boost::asio::ip::tcp::endpoint( boost::asio::ip::tcp::v4(), MessageServer::MESSAGE_SERVER_PORT_NO ) );
-
+    std::string response = "";
     boost::system::error_code error;
+    boost::asio::io_service io_service;
+
+    boost::asio::ip::tcp::acceptor acceptor( io_service, boost::asio::ip::tcp::endpoint( boost::asio::ip::tcp::v4(), MessageServer::MESSAGE_SERVER_PORT_NO ) );
+    boost::asio::ip::tcp::socket socket( io_service );
+
+    acceptor.accept( socket );
 
     while( !quit )
     {
-        boost::asio::ip::tcp::socket socket( io_service );
-        acceptor.accept( socket );
+        boost::asio::streambuf buffer;
+        std::string request = "";
 
-        std::string response;
-        boost::array<char, 4096> buf;
-
-        std::size_t _ = socket.read_some( boost::asio::buffer( buf ), error );
+        std::size_t size = boost::asio::read_until( socket, buffer, "\n", error );
 
         if( error == boost::asio::error::eof )
             break;
         else if( error )
             break;
 
-        std::string request( buf.begin(), buf.end() );
+        std::istream str( &buffer );
+        std::getline( str, request );
+
         std::vector<std::string> request_split = splitRequest( '|', request );
 
         // Message example: announce|test/topic/1
         if( request_split.size() == 2 && request_split[0].find( "announce" ) != std::string::npos )
         {
             messageServer->announce( request_split[1] );
+            response = "ok";
         }
         // Message example: get|test/topic/3|defaul value
         else if( request_split.size() >= 2 && request_split[0].find( "get" ) != std::string::npos )
@@ -56,9 +60,15 @@ void message_service_thread( boost::shared_ptr<MessageServer> messageServer )
         else if( request_split.size() == 3 && request_split[0].find( "publish" ) != std::string::npos )
         {
             messageServer->publish( request_split[1], request_split[2] );
+            response = "ok";
+        }
+        else
+        {
+            response = "{\"error\" : \"There is no action with name '" + request_split[0] + "'\"}";
         }
 
-        boost::asio::write( socket, boost::asio::buffer( response ), error );
+        boost::asio::write( socket, boost::asio::buffer( response ), boost::asio::transfer_exactly( response.size() ), error );
+        response = "";
     }
 }
 

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sstream>
+#include <istream>
 
 #include <boost/smart_ptr.hpp>
 #include <boost/thread.hpp>

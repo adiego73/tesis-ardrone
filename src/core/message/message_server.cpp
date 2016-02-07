@@ -21,13 +21,13 @@ void MessageServer::announce( std::string topic )
 std::string MessageServer::get( std::string topic )
 {
     std::string def = "{\"error\" : \"No topic with name '" + topic + "' was found\"}";
-    this->get( topic, def );
+    return this->get( topic, def );
 }
 
 std::string MessageServer::get( std::string topic, std::string default_value )
 {
     boost::lock_guard<boost::mutex> lock( this->msg_mutex );
-
+    
     //  if topic doesn't exist or the message is not "" (empty)
     if( this->topic_map.count( topic ) > 0 && this->topic_map[topic].length() > 0 )
     {
