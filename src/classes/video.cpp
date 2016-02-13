@@ -79,21 +79,18 @@ Point Video::trackColor( Color color )
 
     double moment10;
     double moment01;
-    double area, area2, r;
+    double area, r;
 
     moments_1 = cv::moments( frame_th2, 1 );
 
     moment10 = moments_1.m10;
     moment01 = moments_1.m01;
-    area2 = moments_1.m00;
+    area = moments_1.m00;
 
-
-    r = sqrt( area2 / M_PI );
-
-    if( area2 > 3 )
+    if( area > 3 )
     {
-        pos.x = moment10 / area2;
-        pos.y = moment01 / area2;
+        pos.x = moment10 / area;
+        pos.y = moment01 / area;
     }
     else
     {

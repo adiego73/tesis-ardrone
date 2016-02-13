@@ -2,7 +2,6 @@
 #define VIDEO_HPP
 
 #include "structures.hpp"
-#include <math.h>
 
 namespace tesis
 {

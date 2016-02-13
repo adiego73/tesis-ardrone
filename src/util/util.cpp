@@ -1,95 +1,46 @@
 #include "util/util.hpp"
+#include <boost/concept_check.hpp>
 
 using namespace tesis;
-
-float Util::rad_to_deg( float rad )
-{
-    return rad * 180.0 / M_PI;
-}
 
 float Util::deg_to_rad( float deg )
 {
     return deg * M_PI / 180.0;
 }
 
-float Util::distance( Point pt, Point pt2 )
+// Conversion from a point in the space to a point into image (from cm to px)
+Point Util::rpoint_to_ipoint( Point rpoint, cv::Size img_size )
 {
-    pt.x -= pt2.x;
-    pt.y -= pt2.y;
-    return sqrt( abs( pt.x * pt.x + pt.y * pt.y ) );
+    Point ipoint;
+    
+    ipoint.x = rpoint.x * img_size.width / Util::SPACE_SIZE_X;
+    ipoint.y = rpoint.y * img_size.height / Util::SPACE_SIZE_Y;
+    
+    return ipoint;
+}
+// Conversion from a point in the image to a point into the space (from px to cm)
+Point Util::ipoint_to_rpoint( Point ipoint, cv::Size img_size )
+{
+    Point rpoint;
+    
+    rpoint.x = ipoint.x * Util::SPACE_SIZE_X / img_size.width ;
+    rpoint.y = ipoint.y * Util::SPACE_SIZE_Y / img_size.height;
+    
+    return rpoint;
 }
 
-float Util::get_angle( Point pt, Point pt2, float deg )
+Point Util::rotate( Point point, float deg )
 {
-    float angle = 0;
+    Point rotated;
+    float rad = Util::deg_to_rad( deg );
 
-    pt.x -= pt2.x;
-    pt.y -= pt2.y;
+    rotated.x = point.x * std::cos( rad ) - point.y * std::sin( rad );
+    rotated.y = point.x * std::sin( rad ) + point.y * std::cos( rad );
 
-    if( pt.x != 0 )
-    {
-        angle = atan( abs( ( float )pt.y / ( float )pt.x ) );
-        angle = rad_to_deg( angle );
-
-        if( pt.x > 0 )
-        {
-            if( pt.y < 0 )
-                angle = -( angle + 90 );
-            else
-                angle = -( 90 - angle );
-        }
-        else if( pt.y < 0 )
-            angle += 90;
-        else
-            angle = 90 - angle;
-    }
-
-    return angle;
+    return rotated;
 }
-
-Point Util::get_xy_distance( int dist, float deg )
+bool Util::file_exists( std::string path )
 {
-    Point pt;
-    float rad = deg_to_rad( deg );
-
-    pt.y = dist * sin( rad );
-    pt.x = dist * cos( rad );
-    return pt;
+    struct stat buffer;
+    return ( stat( path.c_str(), &buffer ) == 0 );
 }
-
-Point Util::mt_to_px( Point pt, cv::Size img_size )
-{
-    return Point();
-}
-
-int Util::mt_to_px( float mt, cv::Size img_size )
-{
-    return -1;
-}
-
-// TODO terminar esto.
-Point Util::px_to_mt( Point pt, cv::Size img_size )
-{
-    return Point();
-}
-
-Point Util::rotate( Point pt, float deg )
-{
-    Point pt2;
-    float rad = deg_to_rad( deg );
-
-    pt2.x = pt.x * cos( rad ) - pt.y * sin( rad );
-    pt2.y = pt.x * sin( rad ) + pt.y * cos( rad );
-
-    return pt2;
-}
-
-cv::Point Util::to_cv_point( Point pt )
-{
-    return cv::Point(pt.x, pt.y);
-}
-
-bool Util::file_exists (std::string path) {
-    struct stat buffer;   
-    return (stat (path.c_str(), &buffer) == 0); 
-  }

@@ -2,7 +2,7 @@
 #define UTIL_H
 
 #include <sys/stat.h>
-#include <math.h>
+#include <cmath>
 #include <string>
 
 #include <opencv.hpp>
@@ -15,17 +15,14 @@ namespace tesis
 class Util
 {
     public:
-        static float rad_to_deg( float rad );
         static float deg_to_rad( float deg );
         static Point rotate( Point pt, float deg );
-        static float get_angle( Point pt, Point pt2, float deg );
-        static float distance( Point pt, Point pt2 );
-        static cv::Point to_cv_point( Point pt );
-        static Point get_xy_distance( int dist, float deg );
-        static Point px_to_mt( const Point pt, const cv::Size img_size );
-        static int mt_to_px( float mt, cv::Size img_size );
-        static Point mt_to_px( Point pt, cv::Size img_size );
-        static bool file_exists (std::string path);
+        static Point rpoint_to_ipoint( Point pt, cv::Size img_size );
+        static Point ipoint_to_rpoint( const Point pt, const cv::Size img_size );
+        static bool file_exists( std::string path );
+        
+        static float SPACE_SIZE_X = 239.0f;
+        static float SPACE_SIZE_Y = 174.0f;
 
     private:
         Util();
