@@ -78,3 +78,8 @@ void EnvironmentConfiguration::parse()
     }
 }
 
+EnvironmentConfiguration::~EnvironmentConfiguration()
+{
+
+}
+

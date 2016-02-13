@@ -7,13 +7,8 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
 
-#include <boost/smart_ptr.hpp>
-
-#include <cassert>
 #include <exception>
 #include <iostream>
-#include <sstream>
-#include <fstream>
 #include <string>
 
 namespace tesis
@@ -25,6 +20,7 @@ class EnvironmentConfiguration
         EnvironmentConfiguration(std::string path);
         EnvironmentConfig get();
 
+        ~EnvironmentConfiguration();
     private:
         EnvironmentConfig configuration;
         std::string path;

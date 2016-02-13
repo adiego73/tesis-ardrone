@@ -20,21 +20,6 @@ struct Color
     Range Value;
 };
 
-// struct PIDValues
-// {
-//     double Kp;
-//     double Kd;
-//     double Ki;
-// };
-// 
-// struct PIDConfig
-// {
-//     PIDValues Roll;
-//     PIDValues Pitch;
-//     PIDValues Yaw;
-// };
-
-
 struct EnvironmentConfig
 {
     std::vector< Color > safe_spot;

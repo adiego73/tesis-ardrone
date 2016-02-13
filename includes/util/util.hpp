@@ -1,7 +1,9 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <sys/stat.h>
 #include <math.h>
+#include <string>
 
 #include <opencv.hpp>
 
@@ -23,6 +25,7 @@ class Util
         static Point px_to_mt( const Point pt, const cv::Size img_size );
         static int mt_to_px( float mt, cv::Size img_size );
         static Point mt_to_px( Point pt, cv::Size img_size );
+        static bool file_exists (std::string path);
 
     private:
         Util();

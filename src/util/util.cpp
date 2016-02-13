@@ -88,3 +88,8 @@ cv::Point Util::to_cv_point( Point pt )
 {
     return cv::Point(pt.x, pt.y);
 }
+
+bool Util::file_exists (std::string path) {
+    struct stat buffer;   
+    return (stat (path.c_str(), &buffer) == 0); 
+  }

@@ -7,8 +7,6 @@
 #include <map>
 
 #include <boost/thread.hpp>
-#include <boost/array.hpp>
-#include <boost/asio.hpp>
 
 namespace tesis
 {
@@ -23,9 +21,8 @@ class MessageServer
         void publish( std::string topic, std::string message );
         std::string get( std::string topic );
         std::string get( std::string topic, std::string default_value );
-        void runServer();
+        std::vector<std::string> topics();
 
-        static const int MESSAGE_SERVER_PORT_NO = 9090;
     private:
         std::map<std::string, std::string> topic_map;
         boost::mutex msg_mutex;

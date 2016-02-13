@@ -25,11 +25,10 @@ int main( int argc, char** argv )
 
     threads.create_thread( boost::bind( gui_thread, msg_server ) );
     threads.create_thread( boost::bind( camera_thread, argv[1], msg_server ) );
-    threads.create_thread( boost::bind( robot_thread, argv[1], msg_server ) );
-    threads.create_thread( boost::bind( message_service_thread, msg_server ) );
+    threads.create_thread( boost::bind( robot_thread, msg_server ) );
 
     threads.join_all();
-    
+
     return 0;
 }
 

@@ -14,12 +14,24 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
     messageServer->announce( "camera/destination/x" );
     messageServer->announce( "camera/destination/y" );
     messageServer->announce( "camera/robot_found" );
+    messageServer->announce( "camera/elapsed_time" );
 
     std::vector<Point> destinations = env.getDestinations();
     int destination_index = 0;
 
+    std::string robot_visible;
+
+    long time = 0;
+    auto start = std::chrono::high_resolution_clock::now();
+
     while( !quit )
     {
+        auto end = std::chrono::high_resolution_clock::now();
+
+        auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>( end - start );
+
+        start = std::chrono::high_resolution_clock::now();
+
         // El robot debe mandar su altura cada tanto.
         std::string altitude_msg = messageServer->get( "robot/altitude", "0" );
         float robot_altitude = std::stof( altitude_msg );
@@ -30,14 +42,22 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
         messageServer->publish( "camera/robot_position/y", std::to_string( robot_position.y ) );
         messageServer->publish( "camera/robot_position/z", std::to_string( robot_altitude ) );
 
-        if( env.isRobotVisible() )
+        // if the robot was previously found, time should be elapsed_time
+        if( messageServer->get( "camera/robot_found" ).find( "true" ) != std::string::npos )
         {
-            messageServer->publish( "camera/robot_found", "true" );
+            time = elapsed_time.count();
         }
         else
         {
-            messageServer->publish( "camera/robot_found", "false" );
+            // if not, it should be added to elapsed_time
+            time += elapsed_time.count();
         }
+
+        messageServer->publish( "camera/elapsed_time", std::to_string( time ) );
+
+        robot_visible = env.isRobotVisible() ? "true" : "false";
+
+        messageServer->publish( "camera/robot_found", robot_visible );
 
         // TODO lo primero que tiene que hacer el robot es pedir el proximo destino.
         bool go_next_destination;

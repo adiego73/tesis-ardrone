@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 #include <istream>
+#include <iostream>
+#include <chrono>
 
 #include <boost/smart_ptr.hpp>
 #include <boost/thread.hpp>
@@ -15,8 +17,7 @@
 
 void gui_thread( boost::shared_ptr<tesis::MessageServer> messageServer );
 void camera_thread( std::string env_config_path, boost::shared_ptr<tesis::MessageServer> messageServer );
-void robot_thread( std::string robot_config_path, boost::shared_ptr<tesis::MessageServer> messageServer );
-void message_service_thread( boost::shared_ptr<tesis::MessageServer> messageServer );
+void robot_thread( boost::shared_ptr<tesis::MessageServer> messageServer );
 
 
 #endif
