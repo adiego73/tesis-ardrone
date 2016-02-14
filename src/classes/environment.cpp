@@ -78,6 +78,11 @@ bool Environment::isRobotVisible()
     return ( this->robot_position.x != -1 );
 }
 
+void Environment::updateFrame( boost::shared_ptr< VideoData > videoProxy )
+{
+    videoProxy->updateFrame(this->video_camera->getFrame());
+}
+
 
 Environment::~Environment()
 {

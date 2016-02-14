@@ -2,7 +2,7 @@
 
 using namespace tesis;
 
-void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer> messageServer )
+void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer> messageServer, boost::shared_ptr<VideoData> videoData )
 {
     Environment env( env_config_path );
 
@@ -26,6 +26,9 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
 
     while( !quit )
     {
+        // I think this is the simplest way to pass the frame to the gui thread.
+        env.updateFrame(videoData);
+        
         auto end = std::chrono::high_resolution_clock::now();
 
         auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>( end - start );

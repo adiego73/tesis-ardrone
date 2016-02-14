@@ -3,9 +3,10 @@
 
 #include <boost/thread.hpp>
 
-
 #include "structures.hpp"
 #include "util/util.hpp"
+#include "core/data/videodata.hpp"
+
 #include "classes/environment_configuration.hpp"
 #include "classes/video.hpp"
 
@@ -19,6 +20,7 @@ class Environment
         std::vector<Point> getDestinations();
         bool isRobotVisible();
         Point getRobotPostionNormalized(float robot_altitude);
+        void updateFrame(boost::shared_ptr<VideoData> videoProxy);
         
         Environment(std::string config_path);
         ~Environment();

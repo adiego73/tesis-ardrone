@@ -6,6 +6,9 @@
 #include <istream>
 #include <iostream>
 #include <chrono>
+#include <dlfcn.h>
+
+#include <opencv.hpp>
 
 #include <boost/smart_ptr.hpp>
 #include <boost/thread.hpp>
@@ -14,9 +17,10 @@
 #include "classes/environment.hpp"
 #include "config/configutarion.hpp"
 #include "core/message/message_server.hpp"
+#include "core/data/videodata.hpp"
 
-void gui_thread( boost::shared_ptr<tesis::MessageServer> messageServer );
-void camera_thread( std::string env_config_path, boost::shared_ptr<tesis::MessageServer> messageServer );
+void gui_thread( boost::shared_ptr<tesis::MessageServer> messageServer, boost::shared_ptr<tesis::VideoData> videoData);
+void camera_thread( std::string env_config_path, boost::shared_ptr<tesis::MessageServer> messageServer, boost::shared_ptr<tesis::VideoData> videoData);
 void robot_thread( boost::shared_ptr<tesis::MessageServer> messageServer );
 
 

@@ -19,6 +19,7 @@ include_directories(./includes/
 add_executable(tesis-ardrone main.cpp 
 
                              src/core/message/message_server.cpp
+                             src/core/data/videodata.cpp
                              src/core/camera_thread.cpp
                              src/core/robot_thread.cpp
                              src/core/gui_thread.cpp
@@ -30,7 +31,7 @@ add_executable(tesis-ardrone main.cpp
                 )
 
 # pthread
-find_library(PTHREAD_LIB NAMES pthread)
+#find_library(PTHREAD_LIB NAMES pthread)
 
 # opencv
 find_package( OpenCV REQUIRED )
@@ -39,9 +40,8 @@ find_package( OpenCV REQUIRED )
 find_library(BOOST_THREAD_LIB NAMES boost_thread PATHS ${BOOST_LIB_PATH})
 find_library(BOOST_SYSTEM_LIB NAMES boost_system PATHS ${BOOST_LIB_PATH})
 
-target_link_libraries(tesis-ardrone ${PTHREAD_LIB} 
+target_link_libraries(tesis-ardrone ${CMAKE_DL_LIBS} 
                                     ${OpenCV_LIBS}
                                     ${BOOST_THREAD_LIB} 
                                     ${BOOST_SYSTEM_LIB} 
-                                    ${PTHREAD_LIB}
                                     )                                   
