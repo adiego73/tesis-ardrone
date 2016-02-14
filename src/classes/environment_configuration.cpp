@@ -23,6 +23,7 @@ void EnvironmentConfiguration::parse()
         property_tree::ptree ptree;
         property_tree::read_json( this->path, ptree );
 
+        Size space_size;
         Color robot_id;
         Range r_hue;
         Range r_saturation;
@@ -41,10 +42,15 @@ void EnvironmentConfiguration::parse()
         robot_id.Saturation = r_saturation;
         robot_id.Value = r_value;
 
+        space_size.height = ptree.get<float>("space.height");
+        space_size.width = ptree.get<float>("space.width");
+        
         config.camera_height = ptree.get<float>( "camera_height" );
         config.camera_number = ptree.get( "camera_number", 0 );
         config.robot_id = robot_id;
-
+        config.space = space_size;
+        
+        // We are not considering unsafe spots yet.
         BOOST_FOREACH( property_tree::ptree::value_type & val, ptree.get_child( "safe_spot" ) )
         {
             property_tree::ptree child = val.second;

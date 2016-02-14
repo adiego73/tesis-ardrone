@@ -59,9 +59,10 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
 
         messageServer->publish( "camera/robot_found", robot_visible );
 
-        // TODO lo primero que tiene que hacer el robot es pedir el proximo destino.
+        
+        // TODO ver como manejo esto porque no estoy seguro.
         bool go_next_destination;
-        std::string go_next_destination_str = messageServer->get( "robot/go_next_destination", "false" );
+        std::string go_next_destination_str = messageServer->get( "gui/go_next_destination", "false" );
         std::istringstream( go_next_destination_str ) >> std::boolalpha >> go_next_destination;
 
         if( go_next_destination )

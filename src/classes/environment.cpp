@@ -50,7 +50,7 @@ Point Environment::getRobotPostionNormalized( float robot_altitude )
     robot_position.x = normalize( this->video_camera->getFrameWidth(), robot_position.x );
     robot_position.y = normalize( this->video_camera->getFrameHeight(), robot_position.y );
 
-    robot_position = Util::px_to_mt( robot_position, this->video_camera->getFrameSize() );
+    robot_position = Util::ipoint_to_rpoint( robot_position, this->video_camera->getFrameSize(), this->env_config.space);
 
     if( this->isRobotVisible() )
     {

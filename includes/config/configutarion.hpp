@@ -20,6 +20,12 @@ struct Color
     Range Value;
 };
 
+struct Size
+{
+    float height;
+    float width;
+};
+
 struct EnvironmentConfig
 {
     std::vector< Color > safe_spot;
@@ -27,6 +33,7 @@ struct EnvironmentConfig
     Color robot_id;
     float camera_height;
     int camera_number;
+    Size space;
 };
 
 };
