@@ -20,12 +20,16 @@ def main(argv):
     cv2.namedWindow('result')
 
     # Starting with 100's to prevent error while masking
-    h,s,v = 100,100,100
+    h_min,s_min,v_min = 100,100,100
+    h_max,s_max,v_max = 180,255,255
 
     # Creating track bar
-    cv2.createTrackbar('h', 'result',0,179,nothing)
-    cv2.createTrackbar('s', 'result',0,255,nothing)
-    cv2.createTrackbar('v', 'result',0,255,nothing)
+    cv2.createTrackbar('H max', 'result',0,179,nothing)
+    cv2.createTrackbar('H min', 'result',0,179,nothing)
+    cv2.createTrackbar('S max', 'result',0,255,nothing)
+    cv2.createTrackbar('S min', 'result',0,255,nothing)
+    cv2.createTrackbar('V max', 'result',0,255,nothing)
+    cv2.createTrackbar('V min', 'result',0,255,nothing)
 
     while(1):
         _, frame = cap.read()
@@ -34,17 +38,22 @@ def main(argv):
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
         # get info from track bar and appy to result
-        h = cv2.getTrackbarPos('h','result')
-        s = cv2.getTrackbarPos('s','result')
-        v = cv2.getTrackbarPos('v','result')
+        h_min = cv2.getTrackbarPos('H min','result')
+        s_min = cv2.getTrackbarPos('S min','result')
+        v_min = cv2.getTrackbarPos('V min','result')
+        
+        h_max = cv2.getTrackbarPos('H max','result')
+        s_max = cv2.getTrackbarPos('S max','result')
+        v_max = cv2.getTrackbarPos('V max','result')
 
         # Normal masking algorithm
-        lower_blue = np.array([h,s,v])
-        upper_blue = np.array([180,255,255])
+        lower = np.array([h_min,s_min,v_min])
+        upper = np.array([h_max,s_max,v_max])
 
-        mask = cv2.inRange(hsv,lower_blue, upper_blue)
+        mask = cv2.inRange(hsv, lower, upper)
 
-        result = cv2.bitwise_and(frame,frame,mask = mask)
+        frame = cv2.blur(frame, (5,5))
+        result = cv2.bitwise_and(frame, frame, mask = mask)
 
         cv2.imshow('result',result)
 

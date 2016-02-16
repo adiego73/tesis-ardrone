@@ -22,12 +22,12 @@ int main( int argc, char** argv )
     }
 
     boost::shared_ptr<MessageServer> msg_server( new MessageServer() );
-    boost::shared_ptr<VideoData> frame(new VideoData());
+    boost::shared_ptr<VideoData> videoProxy( new VideoData() );
 
     boost::thread_group threads;
 
-    threads.create_thread( boost::bind( gui_thread, msg_server, frame) );
-    threads.create_thread( boost::bind( camera_thread, argv[1], msg_server, frame) );
+    threads.create_thread( boost::bind( gui_thread, msg_server, videoProxy ) );
+    threads.create_thread( boost::bind( camera_thread, argv[1], msg_server, videoProxy ) );
     //threads.create_thread( boost::bind( robot_thread, msg_server ) );
 
     threads.join_all();
