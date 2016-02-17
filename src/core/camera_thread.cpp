@@ -4,8 +4,9 @@ using namespace tesis;
 
 void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer> messageServer, boost::shared_ptr<VideoData> videoData )
 {
+    std::cout << "camera thread" << std::endl;
     Environment env( env_config_path );
-
+    
     bool quit = false;
 
     messageServer->announce( "camera/robot_position/x" );
@@ -17,6 +18,13 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
     messageServer->announce( "camera/elapsed_time" );
 
     std::vector<Point> destinations = env.getDestinations();
+//     int a = 1;
+//     for (Point dest : destinations)
+//     {
+//         std::cout << a << ") x: " << dest.x << " y: " << dest.y << std::endl;
+//         a++;
+//     }
+    
     int destination_index = 0;
 
     std::string robot_visible;
@@ -61,11 +69,9 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
         robot_visible = env.isRobotVisible() ? "true" : "false";
 
         messageServer->publish( "camera/robot_found", robot_visible );
-
         
-        // TODO ver como manejo esto porque no estoy seguro.
         bool go_next_destination;
-        std::string go_next_destination_str = messageServer->get( "gui/go_next_destination", "false" );
+        std::string go_next_destination_str = messageServer->get( "gui/go_next_destination", "true");
         std::istringstream( go_next_destination_str ) >> std::boolalpha >> go_next_destination;
 
         if( go_next_destination )
@@ -81,6 +87,9 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
 
             messageServer->publish( "camera/destination/x", std::to_string( next_destination.x ) );
             messageServer->publish( "camera/destination/y", std::to_string( next_destination.y ) );
+            
+            // TODO esto es un hack. GUI deberia publicar sus propios mensajes.
+            messageServer->publish( "gui/go_next_destination", "false" );
         }
 
         std::string finish_msg = messageServer->get( "gui/finish", "false" );

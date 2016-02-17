@@ -6,6 +6,8 @@
 #include <vector>
 #include <map>
 
+#include <iostream>
+
 #include <boost/thread.hpp>
 
 namespace tesis

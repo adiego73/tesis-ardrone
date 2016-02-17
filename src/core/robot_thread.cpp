@@ -4,7 +4,7 @@ using namespace tesis;
 
 void robot_thread( boost::shared_ptr<MessageServer> messageServer )
 {
-    std::string path = "../lib/libardrone.so";
+    std::string path = "./lib/libardrone.so";
 
     void* handle = dlopen( path.c_str(), RTLD_NOW );
 
@@ -25,6 +25,7 @@ void robot_thread( boost::shared_ptr<MessageServer> messageServer )
         else
         {
             robot_t run = ( robot_t ) dlsym( handle, "run" );
+            std::cout << "robot thread" << std::endl;
             run( messageServer.get() );
         }
 

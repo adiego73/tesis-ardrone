@@ -7,6 +7,7 @@
 #include <iostream>
 #include <chrono>
 #include <dlfcn.h>
+#include <vector>
 
 #include <opencv.hpp>
 

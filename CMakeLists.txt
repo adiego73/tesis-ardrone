@@ -1,6 +1,6 @@
-project(tesis-ardrone CXX)
-
 cmake_minimum_required(VERSION 2.8.4)
+
+project(tesis-ardrone CXX)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
 
@@ -44,4 +44,8 @@ target_link_libraries(tesis-ardrone ${CMAKE_DL_LIBS}
                                     ${OpenCV_LIBS}
                                     ${BOOST_THREAD_LIB} 
                                     ${BOOST_SYSTEM_LIB} 
-                                    )                                   
+                                    )         
+
+install(TARGETS tesis-ardrone DESTINATION bin/)
+install(FILES config/environment.json DESTINATION bin/config/)
+                                   
