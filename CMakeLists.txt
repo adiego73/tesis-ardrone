@@ -18,7 +18,8 @@ include_directories(./includes/
                     
 add_executable(tesis-ardrone main.cpp 
 
-                             src/core/message/message_server.cpp
+#                              src/core/message/message_server.impl.cpp
+#                              src/core/message/message_server.cpp
                              src/core/data/videodata.cpp
                              src/core/camera_thread.cpp
                              src/core/robot_thread.cpp

@@ -73,7 +73,7 @@
         }
     },
     "camera_height": 4,
-    "camera_number": 1,
+    "camera_number": 0,
     "space" : {
         "height": 230.0,
         "width": 280.0

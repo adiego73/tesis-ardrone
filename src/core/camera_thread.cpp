@@ -1,5 +1,6 @@
 #include "core/threads.hpp"
 
+
 using namespace tesis;
 
 void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer> messageServer, boost::shared_ptr<VideoData> videoData )
@@ -27,8 +28,6 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
     
     int destination_index = 0;
 
-    std::string robot_visible;
-
     long time = 0;
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -44,17 +43,16 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
         start = std::chrono::high_resolution_clock::now();
 
         // El robot debe mandar su altura cada tanto.
-        std::string altitude_msg = messageServer->get( "robot/altitude", "0" );
-        float robot_altitude = std::stof( altitude_msg );
+        float robot_altitude = messageServer->get( "robot/altitude", 0.0f );
 
         Point robot_position = env.getRobotPostionNormalized( robot_altitude );
 
-        messageServer->publish( "camera/robot_position/x", std::to_string( robot_position.x ) );
-        messageServer->publish( "camera/robot_position/y", std::to_string( robot_position.y ) );
-        messageServer->publish( "camera/robot_position/z", std::to_string( robot_altitude ) );
+        messageServer->publish( "camera/robot_position/x", robot_position.x );
+        messageServer->publish( "camera/robot_position/y", robot_position.y );
+        messageServer->publish( "camera/robot_position/z", robot_altitude );
 
         // if the robot was previously found, time should be elapsed_time
-        if( messageServer->get( "camera/robot_found" ).find( "true" ) != std::string::npos )
+        if( messageServer->get( "camera/robot_found", false) == true)
         {
             time = elapsed_time.count();
         }
@@ -64,15 +62,11 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
             time += elapsed_time.count();
         }
 
-        messageServer->publish( "camera/elapsed_time", std::to_string( time ) );
+        messageServer->publish( "camera/elapsed_time", time );
 
-        robot_visible = env.isRobotVisible() ? "true" : "false";
-
-        messageServer->publish( "camera/robot_found", robot_visible );
+        messageServer->publish( "camera/robot_found", env.isRobotVisible() );
         
-        bool go_next_destination;
-        std::string go_next_destination_str = messageServer->get( "gui/go_next_destination", "true");
-        std::istringstream( go_next_destination_str ) >> std::boolalpha >> go_next_destination;
+        bool go_next_destination = messageServer->get( "gui/go_next_destination", true);
 
         if( go_next_destination )
         {
@@ -85,16 +79,14 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
 
             destination_index++;
 
-            messageServer->publish( "camera/destination/x", std::to_string( next_destination.x ) );
-            messageServer->publish( "camera/destination/y", std::to_string( next_destination.y ) );
+            messageServer->publish( "camera/destination/x", next_destination.x );
+            messageServer->publish( "camera/destination/y", next_destination.y );
             
             // TODO esto es un hack. GUI deberia publicar sus propios mensajes.
-            messageServer->publish( "gui/go_next_destination", "false" );
+            messageServer->publish( "gui/go_next_destination", false );
         }
 
-        std::string finish_msg = messageServer->get( "gui/finish", "false" );
-        std::istringstream( finish_msg ) >> std::boolalpha >> quit;
-
+        quit = messageServer->get( "gui/finish", false );
     }
 
 }

@@ -34,18 +34,18 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
         {
             case key::SPACE:
             {
-                bool takeoff = messageServer->get( "gui/action/takeoff", "false" ).find( "false" ) != std::string::npos;
+                bool takeoff = messageServer->get( "gui/action/takeoff", false );
                 std::cout << "takeoff: " << std::noboolalpha << takeoff << std::endl;
 
                 if( takeoff )
                 {
-                    messageServer->publish( "gui/action/takeoff", "true" );
-                    messageServer->publish( "gui/action/land", "false" );
+                    messageServer->publish( "gui/action/takeoff", true );
+                    messageServer->publish( "gui/action/land", false );
                 }
                 else
                 {
-                    messageServer->publish( "gui/action/takeoff", "false" );
-                    messageServer->publish( "gui/action/land", "true" );
+                    messageServer->publish( "gui/action/takeoff", false );
+                    messageServer->publish( "gui/action/land", true );
                 }
 
                 break;
@@ -53,29 +53,29 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
 
             case key::S:
             {
-                bool autocontrol = messageServer->get( "gui/action/autocontrol", "false" ).find( "false" ) != std::string::npos;
+                bool autocontrol = messageServer->get( "gui/action/autocontrol", false );
                 std::cout << "autocontrol: " << std::noboolalpha << autocontrol << std::endl;
-                messageServer->publish( "gui/action/autocontrol", autocontrol ? "true" : "false" );
+                messageServer->publish( "gui/action/autocontrol", autocontrol ? false : true );
                 break;
             }
 
             case key::Q:
             case key::ESC:
             {
-                messageServer->publish( "gui/finish", "true" );
                 quit = true;
+                messageServer->publish( "gui/finish", quit );
                 break;
             }
 
             case key::N:
             {
-                messageServer->publish( "gui/go_next_destination", "true");
+                messageServer->publish( "gui/go_next_destination", true);
                 break;
             }
 
             case key::L:
             {
-                messageServer->publish( "gui/action/land", "true" );
+                messageServer->publish( "gui/action/land", true );
                 break;
             }
 
