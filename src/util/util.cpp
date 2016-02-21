@@ -19,6 +19,17 @@ Point Util::ipoint_to_rpoint( Point ipoint, cv::Size img_size, Size space_size )
     return rpoint;
 }
 
+// Conversion from a point in the image to a point into the space (from px to cm)
+Point Util::rpoint_to_ipoint( Point rpoint, cv::Size img_size, Size space_size )
+{
+    Point ipoint;
+    
+    ipoint.x = rpoint.x * img_size.width / space_size.width;
+    ipoint.y = rpoint.y * img_size.height / space_size.height;
+
+    return rpoint;
+}
+
 Point Util::rotate( Point point, float deg )
 {
     Point rotated;
