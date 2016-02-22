@@ -18,8 +18,10 @@ class Environment
     public:
         Point getRobotPosition();
         std::vector<Point> getDestinations();
-        bool isRobotVisible();
+        Point nextDestination();
+        
         Point getRobotPostionNormalized(float robot_altitude);
+        bool isRobotVisible();
         void updateFrame(boost::shared_ptr<VideoData> videoProxy);
         
         Environment(std::string config_path);
@@ -34,6 +36,7 @@ class Environment
         
         boost::shared_ptr<Video> video_camera;
         
+        int next_destination;
         float camera_height;
         Point robot_position;
 };

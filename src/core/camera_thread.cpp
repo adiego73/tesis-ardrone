@@ -25,8 +25,6 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
 //         a++;
 //     }
     
-    int destination_index = 0;
-
     std::string robot_visible;
 
     long time = 0;
@@ -76,14 +74,7 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
 
         if( go_next_destination )
         {
-            if( destination_index >= destinations.size() )
-            {
-                destination_index = 0;
-            }
-
-            Point next_destination = destinations[destination_index];
-
-            destination_index++;
+            Point next_destination = env.nextDestination();
 
             messageServer->publish( "camera/destination/x", std::to_string( next_destination.x ) );
             messageServer->publish( "camera/destination/y", std::to_string( next_destination.y ) );

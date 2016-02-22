@@ -21,7 +21,7 @@ cv::Mat VideoData::readFrame()
     if( this->frame.empty() )
     {
         cv::Size s( 640, 480 );
-        cv::Mat black_frame( s, CV_8U );
+        cv::Mat black_frame( s, CV_8UC3 );
 
         return black_frame;
     }

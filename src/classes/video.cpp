@@ -24,11 +24,23 @@ Video::~Video()
     this->cap.release();
 }
 
+void Video::capture()
+{
+    this->cap.read( this->frame );
+}
+
+void Video::drawPoint( Point point, int thickness )
+{
+    cv::line( this->frame, cv::Point( point.x, point.y - 5 ), cv::Point( point.x, point.y + 5 ), cv::Scalar( 0, 0, 0 ), thickness, cv::LINE_AA, 0 );
+    cv::line( this->frame, cv::Point( point.x - 5, point.y ), cv::Point( point.x + 5, point.y ), cv::Scalar( 0, 0, 0 ), thickness, cv::LINE_AA, 0 );
+}
+
 cv::Mat Video::getFrame()
 {
-    cv::Mat frame;
-    this->cap.read( frame );
-    return frame;
+    if( this->frame.empty() )
+        this->capture();
+
+    return this->frame;
 }
 
 cv::Size Video::getFrameSize()
@@ -51,7 +63,7 @@ Point Video::trackColor( Color color )
     Point pos;
     cv::Mat frame = this->getFrame();
     cv::Size imageSize = this->getFrameSize();
-    
+
     cv::Mat frame_th = cv::Mat( imageSize, CV_8UC1 );
     cv::Mat frame_th2 = cv::Mat( imageSize, CV_8UC1 );
     cv::Mat img_2 = cv::Mat( imageSize, CV_8UC3 );
@@ -60,17 +72,17 @@ Point Video::trackColor( Color color )
 
     cv::Scalar thresholdMin;
     cv::Scalar thresholdMax;
-    
+
     thresholdMin.val[0] = color.Hue.min;
     thresholdMin.val[1] = color.Saturation.min;
     thresholdMin.val[2] = color.Value.min;
-    
+
     thresholdMax.val[0] = color.Hue.max;
     thresholdMax.val[1] = color.Saturation.max;
     thresholdMax.val[2] = color.Value.max;
-    
+
     cv::cvtColor( frame, img_2, CV_BGR2HSV );
-    cv::inRange( img_2,thresholdMin, thresholdMax , frame_th );
+    cv::inRange( img_2, thresholdMin, thresholdMax , frame_th );
 
     cv::morphologyEx( frame_th, frame_th2, CV_MOP_OPEN, morphKernel );
 
