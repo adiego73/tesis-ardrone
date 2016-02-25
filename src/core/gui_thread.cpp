@@ -32,7 +32,7 @@ using namespace tesis;
 #endif
 
 
-// indice 0: kp
+// indice 0: kp, 
 // indice 1: ki
 // indice 2: kd
 // indice 3: set
@@ -49,7 +49,7 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
     cv::Mat frame;
     cv::Mat graphics_frame( cv::Size( 640, 630 ), CV_8UC3, cv::Scalar( 255, 255, 255 ) );
     std::string window_name = "Video Camera";
-    std::string graphics_window_name = "Grafics";
+    std::string graphics_window_name = "Graphics";
 
     VectorPIDValues pitch_values;
     VectorPIDValues roll_values;
@@ -57,8 +57,6 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
     VectorPIDValues altitude_values;
 
     cv::namedWindow( window_name, cv::WINDOW_AUTOSIZE );
-
-    cv::namedWindow( graphics_window_name, cv::WINDOW_AUTOSIZE );
 
     frame = videoProxy->readFrame();
 
@@ -144,6 +142,7 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
                 {
                     std::cout << topic << std::endl;
                 }
+                break;
             }
 
             case key::D:
