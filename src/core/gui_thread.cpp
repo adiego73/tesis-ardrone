@@ -32,7 +32,7 @@ using namespace tesis;
 #endif
 
 
-// indice 0: kp, 
+// indice 0: kp,
 // indice 1: ki
 // indice 2: kd
 // indice 3: set
@@ -47,7 +47,6 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
     bool quit;
     bool show_graphics = false;
     cv::Mat frame;
-    cv::Mat graphics_frame( cv::Size( 640, 630 ), CV_8UC3, cv::Scalar( 255, 255, 255 ) );
     std::string window_name = "Video Camera";
     std::string graphics_window_name = "Graphics";
 
@@ -77,6 +76,7 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
 
         if( show_graphics )
         {
+            cv::Mat graphics_frame( cv::Size( 640, 630 ), CV_8UC3, cv::Scalar( 255, 255, 255 ) );
             update_vector_pid_values( messageServer, pitch_values, roll_values , yaw_values, altitude_values );
             get_graphics_frame( graphics_frame, pitch_values, roll_values, yaw_values, altitude_values );
 
@@ -142,6 +142,7 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
                 {
                     std::cout << topic << std::endl;
                 }
+
                 break;
             }
 
@@ -202,11 +203,11 @@ void get_graphics_frame( cv::Mat& frame, VectorPIDValues pitch, VectorPIDValues 
     }
 
     //********************  PARA LA ALTITUDE  ************
-    //LINEA CENTRO YAW
+    //LINEA CENTRO
     cv::line( frame, cv::Point( 0, CENTRO_Y_YAW ), cv::Point( frame.size().width, CENTRO_Y_YAW ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
-    //LINEA ARRIBA YAW
+    //LINEA ARRIBA
     cv::line( frame, cv::Point( 0, CENTRO_Y_YAW + 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_YAW + 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
-    //LINEA ABAJO YAW
+    //LINEA ABAJO 
     cv::line( frame, cv::Point( 0, CENTRO_Y_YAW - 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_YAW - 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
 
     for( int i = 0; i < int( altitude.size() - 1 ); i++ )
@@ -223,7 +224,7 @@ void get_graphics_frame( cv::Mat& frame, VectorPIDValues pitch, VectorPIDValues 
     cv::putText( frame, "derivate", cv::Point( 10, 50 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 0, 0, 255 ) );
     cv::putText( frame, "total_pitch", cv::Point( 10, 70 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 200, 200, 0 ) );
     cv::putText( frame, "ROLL", cv::Point( 10, CENTRO_Y_ROLL - AMPLIAR_Y2 + 20 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 200, 200, 0 ) );
-    cv::putText( frame, "YAW", cv::Point( 10, CENTRO_Y_YAW - AMPLIAR_Y2 + 20 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 200, 200, 0 ) );
+    cv::putText( frame, "ALTITUDE", cv::Point( 10, CENTRO_Y_YAW - AMPLIAR_Y2 + 20 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 200, 200, 0 ) );
 
     cv::line( frame, cv::Point( frame.size().width - 100, 55 ), cv::Point( frame.size().width - 10, 55 ), CV_RGB( 0, 0, 0 ), 2, 8, 0 );
 
@@ -238,16 +239,16 @@ void get_graphics_frame( cv::Mat& frame, VectorPIDValues pitch, VectorPIDValues 
 
 void update_vector_pid_values( boost::shared_ptr<MessageServer> server, VectorPIDValues& pitch, VectorPIDValues& roll, VectorPIDValues& yaw, VectorPIDValues& altitude )
 {
-    if( pitch.size() >= 10 )
+    if( pitch.size() >= 300 )
         pitch.erase( pitch.begin() );
 
-    if( roll.size() >= 10 )
+    if( roll.size() >= 300 )
         roll.erase( roll.begin() );
 
-    if( yaw.size() >= 10 )
+    if( yaw.size() >= 300 )
         yaw.erase( yaw.begin() );
 
-    if( altitude.size() >= 10 )
+    if( altitude.size() >= 300 )
         altitude.erase( altitude.begin() );
 
     float pKp = std::stof( server->get( "robot/pitch/kp", "0" ) );
@@ -281,5 +282,5 @@ void update_vector_pid_values( boost::shared_ptr<MessageServer> server, VectorPI
     float aValue = std::stof( server->get( "robot/altitude/value", "0" ) );
 
     altitude.push_back( std::make_tuple( aKp, aKi, aKd, aSet, aValue ) );
-    
+
 }
