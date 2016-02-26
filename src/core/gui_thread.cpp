@@ -38,22 +38,28 @@ using namespace tesis;
 // indice 3: set
 // indice 4: actual value
 typedef std::vector<std::tuple<float, float, float, float, float>> VectorPIDValues;
+typedef Point Velocity;
 
-void get_graphics_frame( cv::Mat& frame, VectorPIDValues pitch, VectorPIDValues roll, VectorPIDValues yaw, VectorPIDValues altitude );
-void update_vector_pid_values( boost::shared_ptr<MessageServer> server, VectorPIDValues& pitch, VectorPIDValues& roll, VectorPIDValues& yaw, VectorPIDValues& altitude );
+void update_graphics_frame( cv::Mat& frame, VectorPIDValues pitch, VectorPIDValues roll, VectorPIDValues yaw, VectorPIDValues altitude );
+void update_robot_debug_frame( cv::Mat& frame, VectorPIDValues roll, VectorPIDValues pitch, VectorPIDValues yaw, VectorPIDValues altitude, boost::shared_ptr<Environment> env, Point position, Velocity velocity );
+void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDValues roll, VectorPIDValues pitch, VectorPIDValues yaw, Point position, Velocity velocity );
+void update_vector_pid_values( boost::shared_ptr<MessageServer> server, VectorPIDValues& pitch, VectorPIDValues& roll, VectorPIDValues& yaw, VectorPIDValues& altitude, Point& position, Velocity& velocity );
 
-void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_ptr<VideoData> videoProxy )
+void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_ptr<Environment> env, boost::shared_ptr<VideoData> videoProxy )
 {
     bool quit;
     bool show_graphics = false;
     cv::Mat frame;
     std::string window_name = "Video Camera";
-    std::string graphics_window_name = "Graphics";
+    std::string graphics_window_name = "PID Graphics - Debug";
+    std::string robot_debug_window_name = "Robot and Safe spots - Debug";
 
     VectorPIDValues pitch_values;
     VectorPIDValues roll_values;
     VectorPIDValues yaw_values;
     VectorPIDValues altitude_values;
+    Point robot_position;
+    Velocity robot_velocity;
 
     cv::namedWindow( window_name, cv::WINDOW_AUTOSIZE );
 
@@ -76,10 +82,15 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
 
         if( show_graphics )
         {
-            cv::Mat graphics_frame( cv::Size( 640, 630 ), CV_8UC3, cv::Scalar( 255, 255, 255 ) );
-            update_vector_pid_values( messageServer, pitch_values, roll_values , yaw_values, altitude_values );
-            get_graphics_frame( graphics_frame, pitch_values, roll_values, yaw_values, altitude_values );
+            update_vector_pid_values( messageServer, pitch_values, roll_values , yaw_values, altitude_values, robot_position, robot_velocity );
 
+            cv::Mat graphics_frame( cv::Size( 640, 630 ), CV_8UC3, cv::Scalar( 255, 255, 255 ) );
+            cv::Mat robot_debug_frame( cv::Size( 640, 480 ), CV_8UC3, cv::Scalar( 230, 230, 230 ) );
+
+            update_graphics_frame( graphics_frame, pitch_values, roll_values, yaw_values, altitude_values );
+            update_robot_debug_frame( robot_debug_frame, roll_values, pitch_values, yaw_values, altitude_values, env, robot_position, robot_velocity );
+
+            cv::imshow( robot_debug_window_name, robot_debug_frame );
             cv::imshow( graphics_window_name, graphics_frame );
         }
 
@@ -161,7 +172,7 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
     cv::destroyAllWindows();
 }
 
-void get_graphics_frame( cv::Mat& frame, VectorPIDValues pitch, VectorPIDValues roll, VectorPIDValues yaw, VectorPIDValues altitude )
+void update_graphics_frame( cv::Mat& frame, VectorPIDValues pitch, VectorPIDValues roll, VectorPIDValues yaw, VectorPIDValues altitude )
 {
     //********************  PARA EL PITCH  ************
     //LINEA CENTRO PITCH
@@ -207,7 +218,7 @@ void get_graphics_frame( cv::Mat& frame, VectorPIDValues pitch, VectorPIDValues 
     cv::line( frame, cv::Point( 0, CENTRO_Y_YAW ), cv::Point( frame.size().width, CENTRO_Y_YAW ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
     //LINEA ARRIBA
     cv::line( frame, cv::Point( 0, CENTRO_Y_YAW + 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_YAW + 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
-    //LINEA ABAJO 
+    //LINEA ABAJO
     cv::line( frame, cv::Point( 0, CENTRO_Y_YAW - 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_YAW - 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
 
     for( int i = 0; i < int( altitude.size() - 1 ); i++ )
@@ -226,18 +237,61 @@ void get_graphics_frame( cv::Mat& frame, VectorPIDValues pitch, VectorPIDValues 
     cv::putText( frame, "ROLL", cv::Point( 10, CENTRO_Y_ROLL - AMPLIAR_Y2 + 20 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 200, 200, 0 ) );
     cv::putText( frame, "ALTITUDE", cv::Point( 10, CENTRO_Y_YAW - AMPLIAR_Y2 + 20 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 200, 200, 0 ) );
 
-    cv::line( frame, cv::Point( frame.size().width - 100, 55 ), cv::Point( frame.size().width - 10, 55 ), CV_RGB( 0, 0, 0 ), 2, 8, 0 );
+    cv::line( frame, cv::Point( frame.size().width - 100, 55 ), cv::Point( frame.size().width - 10, 55 ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
 
-    cv::line( frame, cv::Point( frame.size().width - 55, 10 ), cv::Point( frame.size().width - 55, 100 ), CV_RGB( 0, 0, 0 ), 2, 8, 0 );
+    cv::line( frame, cv::Point( frame.size().width - 55, 10 ), cv::Point( frame.size().width - 55, 100 ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
 
-    cv::circle( frame, cv::Point( frame.size().width - 55 + std::get<4>( roll.back() ) * 5, 55 ), 4, CV_RGB( 255, 0, 255 ), -1, 8, 0 );
+    cv::circle( frame, cv::Point( frame.size().width - 55 + std::get<4>( roll.back() ) * 5, 55 ), 4, CV_RGB( 255, 0, 255 ), -1, cv::LINE_8, 0 );
 
-    cv::circle( frame, cv::Point( frame.size().width - 55, 55 - std::get<4>( pitch.back() ) * 5 ), 4, CV_RGB( 255, 0, 0 ), -1, 8, 0 );
+    cv::circle( frame, cv::Point( frame.size().width - 55, 55 - std::get<4>( pitch.back() ) * 5 ), 4, CV_RGB( 255, 0, 0 ), -1, cv::LINE_8, 0 );
 
 }
 
+void update_robot_debug_frame( cv::Mat& frame, VectorPIDValues roll, VectorPIDValues pitch, VectorPIDValues yaw, VectorPIDValues altitude, boost::shared_ptr<Environment> env, Point position, Velocity velocity )
+{
+    float ALT_CAMERA = env->getConfigurationCameraHeight();
 
-void update_vector_pid_values( boost::shared_ptr<MessageServer> server, VectorPIDValues& pitch, VectorPIDValues& roll, VectorPIDValues& yaw, VectorPIDValues& altitude )
+    auto draw_cross = [&frame]( const Point point, const int thickness )
+    {
+        cv::line( frame, cv::Point( point.x, point.y - 5 ), cv::Point( point.x, point.y + 5 ), CV_RGB( 0, 0, 0 ), thickness, cv::LINE_AA, 0 );
+        cv::line( frame, cv::Point( point.x - 5, point.y ), cv::Point( point.x + 5, point.y ), CV_RGB( 0, 0, 0 ), thickness, cv::LINE_AA, 0 );
+    };
+
+    // ------------------------------
+    // RECTANGLE
+    int width = ( frame.cols - ( frame.cols * ( ALT_CAMERA - std::get<4>( altitude.back() ) ) / ALT_CAMERA ) ) / 2;
+    int height = ( frame.rows - ( frame.rows * ( ALT_CAMERA - std::get<4>( altitude.back() ) ) / ALT_CAMERA ) ) / 2;
+
+    cv::line( frame, cv::Point( width, height ), cv::Point( frame.cols - width, height ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( width, height ), cv::Point( width, frame.rows - height ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( frame.cols - width, height ), cv::Point( frame.cols - width, frame.rows - height ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( width, frame.rows - height ), cv::Point( frame.cols - width, frame.rows - height ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
+    // ------------------------------
+
+    // ------------------------------
+    // DESTINATIONS
+    for( Point dest : env->getDestinations() )
+    {
+        draw_cross( dest, 1 );
+    }
+
+    // ------------------------------
+
+    // ------------------------------
+    // NEXT DESTINATION
+    Point next_dest = env->getNextDestination();
+    draw_cross( next_dest, 2 );
+    // -----------------------------
+
+    // ------------------------------
+    // NEXT DESTINATION
+    Point r_position = env->getRobotPostionNormalized( std::get<4>( altitude.back() ) );
+    draw_robot( frame, env, roll, pitch, yaw, position, velocity );
+
+    // ------------------------------
+}
+
+void update_vector_pid_values( boost::shared_ptr<MessageServer> server, VectorPIDValues& pitch, VectorPIDValues& roll, VectorPIDValues& yaw, VectorPIDValues& altitude, Point& position, Velocity& velocity )
 {
     if( pitch.size() >= 300 )
         pitch.erase( pitch.begin() );
@@ -282,5 +336,164 @@ void update_vector_pid_values( boost::shared_ptr<MessageServer> server, VectorPI
     float aValue = std::stof( server->get( "robot/altitude/value", "0" ) );
 
     altitude.push_back( std::make_tuple( aKp, aKi, aKd, aSet, aValue ) );
+
+    velocity.x = std::stof( server->get( "robot/velocity/x", "0" ) );
+    velocity.y = std::stof( server->get( "robot/velocity/y", "0" ) );
+
+    position.x = std::stof( server->get( "camera/robot_position/x", "-1" ) );
+    position.y = std::stof( server->get( "camera/robot_position/y", "-1" ) );
+
+}
+
+//  this function should be improved.
+void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDValues roll, VectorPIDValues pitch, VectorPIDValues yaw, Point position, Velocity velocity )
+{
+
+    auto to_cv_point = []( const Point p )
+    {
+        return cv::Point( p.x, p.y );
+    };
+
+    float yaw_value = std::get<4>( yaw.back() );
+    float pitch_set = std::get<3>( pitch.back() );
+    float roll_set = std::get<3>( roll.back() );
+
+    cv::Size size;
+    size.width = frame.cols;
+    size.height = frame.rows;
+
+    Point posPx = Util::rpoint_to_ipoint( position, size, env->getConfigurationSpaceSize() );
+
+    Point pt;
+    Point pt2;
+
+    float ajusteSet = 200;
+    float ajusteGet = 5;
+
+    // ************ seteo los sets ************
+    //pitch set
+    //desde
+    pt2.y = 0;
+    pt2.x = 4;
+    pt2 = Util::rotate( pt2, yaw_value );
+
+    pt2.x += posPx.x;
+    pt2.y += posPx.y;
+
+    //hasta
+    pt.y = pitch_set * ajusteSet;
+    pt.x = 0;
+
+    pt = Util::rotate( pt, yaw_value );
+
+    pt.y = posPx.y + pt.y;
+    pt.x = posPx.x + 2 + pt.x;
+
+    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 255, 0, 0 ), 1, cv::LINE_8, 0 );
+
+    //roll set
+    //desde
+    pt2.y = 4;
+    pt2.x = 0;
+
+    pt2 = Util::rotate( pt2, yaw_value );
+
+    pt2.x += posPx.x;
+    pt2.y += posPx.y;
+
+    //hasta
+    pt.x = roll_set * ajusteSet;
+    pt.y = 0;
+
+    pt = Util::rotate( pt, yaw_value );
+
+    pt.x = posPx.x + pt.x;
+    pt.y = posPx.y + 2 + pt.y;
+
+    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 255, 0, 0 ), 1, cv::LINE_8, 0 );
+
+    //********** seteo las inclinaciones *********
+    //pitch value
+    //desde
+    pt2.y = 0;
+    pt2.x = -4;
+
+    pt2 = Util::rotate( pt2, yaw_value );
+
+    pt2.x += posPx.x;
+    pt2.y += posPx.y;
+
+    //hasta
+    pt.y = velocity.x * ajusteGet / 10 * -1;                //pitch
+    pt.x = 0;
+
+    pt = Util::rotate( pt, yaw_value );
+
+    pt.y = pt2.y + pt.y;
+    pt.x = pt2.x + pt.x;
+
+    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 255 ), 1, cv::LINE_8, 0 );
+
+    //roll value
+    //desde
+    pt2.y = -4;
+    pt2.x = 0;
+
+    pt2 = Util::rotate( pt2, yaw_value );
+
+    pt2.x += posPx.x;
+    pt2.y += posPx.y;
+
+    //hasta
+    pt.x = velocity.y * ajusteGet / 10;                     //roll
+    pt.y = 0;
+
+    pt = Util::rotate( pt, yaw_value );
+
+    pt.x = pt2.x + pt.x;
+    pt.y = pt2.y + pt.y;
+
+    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 255 ), 1, cv::LINE_8, 0 );
+
+    //dibujo el robot
+    //linea 1
+    //punto1
+    pt.x = -7;
+    pt.y = 0;
+
+    pt = Util::rotate( pt, yaw_value );
+
+    pt.x = posPx.x + pt.x;
+    pt.y = posPx.y + pt.y;
+
+    //punto 2
+    pt2.x = 7;
+    pt2.y = 0;
+
+    pt2 = Util::rotate( pt2, yaw_value );
+
+    pt2.x = posPx.x + pt2.x;
+    pt2.y = posPx.y + pt2.y;
+    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
+
+    //linea 2
+    //punto1
+    pt.x = 0;
+    pt.y = -14;
+
+    pt = Util::rotate( pt, yaw_value );
+
+    pt.x = posPx.x + pt.x;
+    pt.y = posPx.y + pt.y;
+
+    //punto 2
+    pt2.x = 0;
+    pt2.y = 7;
+
+    pt2 = Util::rotate( pt2, yaw_value ) ;
+
+    pt2.x = posPx.x + pt2.x;
+    pt2.y = posPx.y + pt2.y;
+    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
 
 }

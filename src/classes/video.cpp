@@ -29,12 +29,6 @@ void Video::capture()
     this->cap.read( this->frame );
 }
 
-void Video::drawPoint( Point point, int thickness )
-{
-    cv::line( this->frame, cv::Point( point.x, point.y - 5 ), cv::Point( point.x, point.y + 5 ), cv::Scalar( 0, 0, 0 ), thickness, cv::LINE_AA, 0 );
-    cv::line( this->frame, cv::Point( point.x - 5, point.y ), cv::Point( point.x + 5, point.y ), cv::Scalar( 0, 0, 0 ), thickness, cv::LINE_AA, 0 );
-}
-
 cv::Mat Video::getFrame()
 {
     if( this->frame.empty() )

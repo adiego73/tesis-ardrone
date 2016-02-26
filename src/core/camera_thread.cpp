@@ -2,10 +2,9 @@
 
 using namespace tesis;
 
-void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer> messageServer, boost::shared_ptr<VideoData> videoData )
+void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_ptr<Environment> env, boost::shared_ptr<VideoData> videoData )
 {
     std::cout << "camera thread" << std::endl;
-    Environment env( env_config_path );
     
     bool quit = false;
 
@@ -17,14 +16,8 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
     messageServer->announce( "camera/robot_found" );
     messageServer->announce( "camera/elapsed_time" );
 
-    std::vector<Point> destinations = env.getDestinations();
-//     int a = 1;
-//     for (Point dest : destinations)
-//     {
-//         std::cout << a << ") x: " << dest.x << " y: " << dest.y << std::endl;
-//         a++;
-//     }
-    
+    std::vector<Point> destinations = env->getDestinations();
+
     std::string robot_visible;
 
     long time = 0;
@@ -33,7 +26,7 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
     while( !quit )
     {
         // I think this is the simplest way to pass the frame to the gui thread.
-        env.updateFrame(videoData);
+        env->updateFrame(videoData);
         
         auto end = std::chrono::high_resolution_clock::now();
 
@@ -45,7 +38,7 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
         std::string altitude_msg = messageServer->get( "robot/altitude", "0" );
         float robot_altitude = std::stof( altitude_msg );
 
-        Point robot_position = env.getRobotPostionNormalized( robot_altitude );
+        Point robot_position = env->getRobotPostionNormalized( robot_altitude );
 
         messageServer->publish( "camera/robot_position/x", std::to_string( robot_position.x ) );
         messageServer->publish( "camera/robot_position/y", std::to_string( robot_position.y ) );
@@ -64,7 +57,7 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
 
         messageServer->publish( "camera/elapsed_time", std::to_string( time ) );
 
-        robot_visible = env.isRobotVisible() ? "true" : "false";
+        robot_visible = env->isRobotVisible() ? "true" : "false";
 
         messageServer->publish( "camera/robot_found", robot_visible );
         
@@ -74,7 +67,7 @@ void camera_thread( std::string env_config_path, boost::shared_ptr<MessageServer
 
         if( go_next_destination )
         {
-            Point next_destination = env.nextDestination();
+            Point next_destination = env->nextDestination();
 
             messageServer->publish( "camera/destination/x", std::to_string( next_destination.x ) );
             messageServer->publish( "camera/destination/y", std::to_string( next_destination.y ) );

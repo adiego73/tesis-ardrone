@@ -24,6 +24,10 @@ class Environment
         bool isRobotVisible();
         void updateFrame(boost::shared_ptr<VideoData> videoProxy);
         
+        Point getNextDestination();
+        float getConfigurationCameraHeight();
+        Size getConfigurationSpaceSize();
+        
         Environment(std::string config_path);
         ~Environment();
 

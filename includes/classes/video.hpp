@@ -16,7 +16,6 @@ class Video
         float getFrameWidth();
         float getFrameHeight();
         void capture();
-        void drawPoint(Point point, int thickness = 1);
 
         Video( int camera );
         ~Video();

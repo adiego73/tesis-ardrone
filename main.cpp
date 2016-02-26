@@ -8,8 +8,6 @@
 #include "structures.hpp"
 #include "classes/environment.hpp"
 
-#define DEBUG 1
-
 using namespace tesis;
 
 void show_usage();
@@ -23,13 +21,14 @@ int main( int argc, char** argv )
         return 1;
     }
 
+    boost::shared_ptr<Environment> env( new Environment( argv[1] ) );
     boost::shared_ptr<MessageServer> msg_server( new MessageServer() );
     boost::shared_ptr<VideoData> videoProxy( new VideoData() );
 
     boost::thread_group threads;
 
-    threads.create_thread( boost::bind( gui_thread, msg_server, videoProxy ) );
-    threads.create_thread( boost::bind( camera_thread, argv[1], msg_server, videoProxy ) );
+    threads.create_thread( boost::bind( gui_thread, msg_server, env, videoProxy ) );
+    threads.create_thread( boost::bind( camera_thread, msg_server, env, videoProxy ) );
     threads.create_thread( boost::bind( robot_thread, msg_server ) );
 
     threads.join_all();

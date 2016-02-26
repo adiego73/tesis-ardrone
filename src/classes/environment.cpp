@@ -95,21 +95,23 @@ void Environment::updateFrame( boost::shared_ptr< VideoData > videoProxy )
 {
     this->video_camera->capture();
     
-    // draw robot position
-    this->video_camera->drawPoint( this->robot_position, 3 );
-
-    //  draw destinations
-    for( Point point : this->safe_spots )
-    {
-        this->video_camera->drawPoint( point );
-    }
-
-    //  draw next destination
-    this->video_camera->drawPoint( this->safe_spots[this->next_destination], 3 );
-    
     videoProxy->updateFrame( this->video_camera->getFrame() );
 }
 
+float Environment::getConfigurationCameraHeight()
+{
+    return this->camera_height;
+}
+
+Size Environment::getConfigurationSpaceSize()
+{
+    return this->env_config.space;
+}
+
+Point Environment::getNextDestination()
+{
+    return this->safe_spots[this->next_destination];
+}
 
 Environment::~Environment()
 {
