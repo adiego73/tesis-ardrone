@@ -7,6 +7,7 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     std::cout << "camera thread" << std::endl;
     
     bool quit = false;
+    bool autocontrol = false; 
 
     messageServer->announce( "camera/robot_position/x" );
     messageServer->announce( "camera/robot_position/y" );
@@ -21,12 +22,21 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     std::string robot_visible;
 
     long time = 0;
+    int trackDestinations = 10;
     auto start = std::chrono::high_resolution_clock::now();
 
     while( !quit )
     {
         // I think this is the simplest way to pass the frame to the gui thread.
         env->updateFrame(videoData);
+        
+        if (trackDestinations >= 10)
+        {
+            env->trackDestinations();
+            destinations = env->getDestinations();
+            trackDestinations = 0;
+        }
+        trackDestinations++;
         
         auto end = std::chrono::high_resolution_clock::now();
 
@@ -65,6 +75,13 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
         std::string go_next_destination_str = messageServer->get( "gui/go_next_destination", "true");
         std::istringstream( go_next_destination_str ) >> std::boolalpha >> go_next_destination;
 
+        if (autocontrol)
+        {
+            // Calcular distancia y tomar el tiempo siempre que la distancia sea menor que X 
+            // robot_position y env.getNextDestination()
+            
+        }
+        
         if( go_next_destination )
         {
             Point next_destination = env->nextDestination();

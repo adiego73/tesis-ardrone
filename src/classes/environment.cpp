@@ -2,7 +2,7 @@
 
 using namespace tesis;
 
-Environment::Environment( std::string config_path ) : next_destination(0)
+Environment::Environment( std::string config_path ) : next_destination( 0 )
 {
     EnvironmentConfiguration env_configuration( config_path );
 
@@ -11,23 +11,42 @@ Environment::Environment( std::string config_path ) : next_destination(0)
     this->video_camera.reset( new Video( this->env_config.camera_number ) );
 }
 
-std::vector< Point > Environment::getDestinations()
+void Environment::trackDestinations()
 {
-    // Esto podria hacerse por threads.
-    // y que vaya cargando un array.
-    // El array se modifica en medio de un mutex.
     for( int i = 0; i < this->env_config.safe_spot.size(); i++ )
     {
         Color destination = this->env_config.safe_spot[i];
         Point p = this->video_camera->trackColor( destination );
+        p.z = i;
 
-        this->safe_spots.push_back( p );
+        if( p.x != -1 || p.y !=  -1 )
+        {
+            int e = 0;
+
+            // find safe spot position
+            while( e < this->safe_spots.size() && this->safe_spots[e].z !=  i )
+            {
+                e++;
+            }
+            // update safe spot position
+            if( e < this->safe_spots.size() )
+            {
+                this->safe_spots[e] = p;
+            }
+            else
+            {
+                this->safe_spots.push_back( p );
+            }
+        }
     }
+}
 
+std::vector< Point > Environment::getDestinations()
+{
     return this->safe_spots;
 }
 
-Point Environment::getRobotPosition()
+Point Environment::trackRobotPosition()
 {
     Point position = this->video_camera->trackColor( this->env_config.robot_id );
 
@@ -44,7 +63,7 @@ Point Environment::getRobotPostionNormalized( float robot_altitude )
         return value_px;
     };
 
-    Point robot_position = this->getRobotPosition();
+    Point robot_position = this->trackRobotPosition();
     robot_position.x = normalize( this->video_camera->getFrameWidth(), robot_position.x );
     robot_position.y = normalize( this->video_camera->getFrameHeight(), robot_position.y );
 
@@ -79,6 +98,14 @@ bool Environment::isRobotVisible()
 
 Point Environment::nextDestination()
 {
+    if( this->safe_spots.empty() )
+    {
+        Point ret;
+        ret.x = -1;
+        ret.y = -1;
+        return ret;
+    }
+
     if( this->next_destination >= this->safe_spots.size() )
     {
         this->next_destination = 0;
@@ -94,7 +121,7 @@ Point Environment::nextDestination()
 void Environment::updateFrame( boost::shared_ptr< VideoData > videoProxy )
 {
     this->video_camera->capture();
-    
+
     videoProxy->updateFrame( this->video_camera->getFrame() );
 }
 
@@ -111,6 +138,11 @@ Size Environment::getConfigurationSpaceSize()
 Point Environment::getNextDestination()
 {
     return this->safe_spots[this->next_destination];
+}
+
+Point Environment::getRobotPosition()
+{
+    return this->robot_position;
 }
 
 Environment::~Environment()

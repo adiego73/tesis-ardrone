@@ -16,8 +16,8 @@ namespace tesis
 class Environment
 {
     public:
-        Point getRobotPosition();
-        std::vector<Point> getDestinations();
+        Point trackRobotPosition();
+        void trackDestinations();
         Point nextDestination();
         
         Point getRobotPostionNormalized(float robot_altitude);
@@ -27,6 +27,8 @@ class Environment
         Point getNextDestination();
         float getConfigurationCameraHeight();
         Size getConfigurationSpaceSize();
+        Point getRobotPosition();
+        std::vector<Point> getDestinations();
         
         Environment(std::string config_path);
         ~Environment();

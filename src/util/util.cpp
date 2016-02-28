@@ -27,7 +27,7 @@ Point Util::rpoint_to_ipoint( Point rpoint, cv::Size img_size, Size space_size )
     ipoint.x = rpoint.x * img_size.width / space_size.width;
     ipoint.y = rpoint.y * img_size.height / space_size.height;
 
-    return rpoint;
+    return ipoint;
 }
 
 Point Util::rotate( Point point, float deg )
@@ -44,6 +44,14 @@ bool Util::file_exists( std::string path )
 {
     struct stat buffer;
     return ( stat( path.c_str(), &buffer ) == 0 );
+}
+
+float Util::distance( Point opoint, Point dpoint )
+{
+    Point point;
+    point.x = opoint.x - dpoint.x;
+    point.y = opoint.y - dpoint.y;
+    return std::sqrt( std::abs( point.x * point.x + point.y * point.y ) );
 }
 
 // PRIVATE

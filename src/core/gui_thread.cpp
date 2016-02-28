@@ -274,7 +274,6 @@ void update_robot_debug_frame( cv::Mat& frame, VectorPIDValues roll, VectorPIDVa
     {
         draw_cross( dest, 1 );
     }
-
     // ------------------------------
 
     // ------------------------------
@@ -284,8 +283,8 @@ void update_robot_debug_frame( cv::Mat& frame, VectorPIDValues roll, VectorPIDVa
     // -----------------------------
 
     // ------------------------------
-    // NEXT DESTINATION
-    Point r_position = env->getRobotPostionNormalized( std::get<4>( altitude.back() ) );
+    // ROBOT
+    Point r_position = env->getRobotPostionNormalized(std::get <4>(altitude.back()));
     draw_robot( frame, env, roll, pitch, yaw, position, velocity );
 
     // ------------------------------
@@ -470,6 +469,8 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
     pt2.x = 7;
     pt2.y = 0;
 
+//     std::cout << yaw_value << std::endl;
+    
     pt2 = Util::rotate( pt2, yaw_value );
 
     pt2.x = posPx.x + pt2.x;
