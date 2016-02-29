@@ -253,8 +253,8 @@ void update_robot_debug_frame( cv::Mat& frame, VectorPIDValues roll, VectorPIDVa
 
     auto draw_cross = [&frame]( const Point point, const int thickness )
     {
-        cv::line( frame, cv::Point( point.x, point.y - 5 ), cv::Point( point.x, point.y + 5 ), CV_RGB( 0, 0, 0 ), thickness, cv::LINE_AA, 0 );
-        cv::line( frame, cv::Point( point.x - 5, point.y ), cv::Point( point.x + 5, point.y ), CV_RGB( 0, 0, 0 ), thickness, cv::LINE_AA, 0 );
+        cv::line( frame, cv::Point( point.x, point.y - 5 ), cv::Point( point.x, point.y + 5 ), CV_RGB( 0, 0, 0 ), thickness, 16, 0 );
+        cv::line( frame, cv::Point( point.x - 5, point.y ), cv::Point( point.x + 5, point.y ), CV_RGB( 0, 0, 0 ), thickness, 16, 0 );
     };
 
     // ------------------------------
