@@ -176,58 +176,58 @@ void update_graphics_frame( cv::Mat& frame, VectorPIDValues pitch, VectorPIDValu
 {
     //********************  PARA EL PITCH  ************
     //LINEA CENTRO PITCH
-    cv::line( frame, cv::Point( 0, CENTRO_Y_PITCH ), cv::Point( frame.size().width, CENTRO_Y_PITCH ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( 0, CENTRO_Y_PITCH ), cv::Point( frame.size().width, CENTRO_Y_PITCH ), CV_RGB( 0, 0, 0 ), 1, 8, 0 );
     //LINEA ARRIBA PITCH
-    cv::line( frame, cv::Point( 0, CENTRO_Y_PITCH + 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_PITCH + 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( 0, CENTRO_Y_PITCH + 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_PITCH + 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, 8, 0 );
     //LINEA ABAJO PITCH
-    cv::line( frame, cv::Point( 0, CENTRO_Y_PITCH - 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_PITCH - 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( 0, CENTRO_Y_PITCH - 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_PITCH - 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, 8, 0 );
 
     //PUNTOS
     for( int i = 0; i < int( pitch.size() - 1 ); i++ )
     {
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<0>( pitch[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<0>( pitch[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 180, 0 ), 1, cv::LINE_8, 0 );
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<1>( pitch[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<1>( pitch[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 180, 0 ), 1, cv::LINE_8, 0 );
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<2>( pitch[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<2>( pitch[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 0, 200 ), 1, cv::LINE_8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<0>( pitch[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<0>( pitch[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 180, 0 ), 1, 8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<1>( pitch[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<1>( pitch[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 180, 0 ), 1, 8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<2>( pitch[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<2>( pitch[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 0, 200 ), 1, 8, 0 );
 
         //amarillo
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<3>( pitch[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<3>( pitch[i + 1] ) * AMPLIAR_Y ),  CV_RGB( 200, 200, 0 ), 2, cv::LINE_8, 0 );
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<4>( pitch[i] ) * AMPLIAR_Y / 30 ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<4>( pitch[i + 1] ) * AMPLIAR_Y / 30 ), CV_RGB( 0, 255, 255 ), 2, cv::LINE_8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<3>( pitch[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<3>( pitch[i + 1] ) * AMPLIAR_Y ),  CV_RGB( 200, 200, 0 ), 2, 8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<4>( pitch[i] ) * AMPLIAR_Y / 30 ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<4>( pitch[i + 1] ) * AMPLIAR_Y / 30 ), CV_RGB( 0, 255, 255 ), 2, 8, 0 );
     }
 
     //********************  PARA EL ROLL  ************
     //LINEA CENTRO ROLL
-    cv::line( frame, cv::Point( 0, CENTRO_Y_ROLL ), cv::Point( frame.size().width, CENTRO_Y_ROLL ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( 0, CENTRO_Y_ROLL ), cv::Point( frame.size().width, CENTRO_Y_ROLL ), CV_RGB( 0, 0, 0 ), 1, 8, 0 );
     //LINEA ARRIBA ROLL
-    cv::line( frame, cv::Point( 0, CENTRO_Y_ROLL + 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_ROLL + 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( 0, CENTRO_Y_ROLL + 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_ROLL + 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, 8, 0 );
     //LINEA ABAJO ROLL
-    cv::line( frame, cv::Point( 0, CENTRO_Y_ROLL - 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_ROLL - 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( 0, CENTRO_Y_ROLL - 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_ROLL - 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, 8, 0 );
 
     for( int i = 0; i < int( roll.size() - 1 ); i++ )
     {
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_ROLL + std::get<0>( roll[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_ROLL + std::get<0>( roll[i + 1] ) * AMPLIAR_Y ), CV_RGB( 180, 0, 0 ), 1, cv::LINE_8, 0 );
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_ROLL + std::get<1>( roll[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_ROLL + std::get<1>( roll[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 180, 0 ), 1, cv::LINE_8, 0 );
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_ROLL + std::get<2>( roll[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_ROLL + std::get<2>( roll[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 0, 200 ), 1, cv::LINE_8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_ROLL + std::get<0>( roll[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_ROLL + std::get<0>( roll[i + 1] ) * AMPLIAR_Y ), CV_RGB( 180, 0, 0 ), 1, 8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_ROLL + std::get<1>( roll[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_ROLL + std::get<1>( roll[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 180, 0 ), 1, 8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_ROLL + std::get<2>( roll[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_ROLL + std::get<2>( roll[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 0, 200 ), 1, 8, 0 );
 
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_ROLL + std::get<3>( roll[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_ROLL + std::get<3>( roll[i + 1] ) * AMPLIAR_Y ), CV_RGB( 200, 200, 0 ), 2, cv::LINE_8, 0 );
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_ROLL + std::get<4>( roll[i] ) * AMPLIAR_Y / 30 ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_ROLL + std::get<4>( roll[i + 1] ) * AMPLIAR_Y / 30 ), CV_RGB( 0, 255, 255 ), 2, cv::LINE_8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_ROLL + std::get<3>( roll[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_ROLL + std::get<3>( roll[i + 1] ) * AMPLIAR_Y ), CV_RGB( 200, 200, 0 ), 2, 8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_ROLL + std::get<4>( roll[i] ) * AMPLIAR_Y / 30 ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_ROLL + std::get<4>( roll[i + 1] ) * AMPLIAR_Y / 30 ), CV_RGB( 0, 255, 255 ), 2, 8, 0 );
 
     }
 
     //********************  PARA LA ALTITUDE  ************
     //LINEA CENTRO
-    cv::line( frame, cv::Point( 0, CENTRO_Y_YAW ), cv::Point( frame.size().width, CENTRO_Y_YAW ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( 0, CENTRO_Y_YAW ), cv::Point( frame.size().width, CENTRO_Y_YAW ), CV_RGB( 0, 0, 0 ), 1, 8, 0 );
     //LINEA ARRIBA
-    cv::line( frame, cv::Point( 0, CENTRO_Y_YAW + 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_YAW + 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( 0, CENTRO_Y_YAW + 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_YAW + 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, 8, 0 );
     //LINEA ABAJO
-    cv::line( frame, cv::Point( 0, CENTRO_Y_YAW - 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_YAW - 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( 0, CENTRO_Y_YAW - 1 * AMPLIAR_Y2 ), cv::Point( frame.size().width, CENTRO_Y_YAW - 1 * AMPLIAR_Y2 ), CV_RGB( 0, 0, 0 ), 1, 8, 0 );
 
     for( int i = 0; i < int( altitude.size() - 1 ); i++ )
     {
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_YAW + std::get<0>( altitude[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_YAW + std::get<0>( altitude[i + 1] ) * AMPLIAR_Y ), CV_RGB( 200, 0, 0 ), 1, cv::LINE_8, 0 );
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_YAW + std::get<1>( altitude[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_YAW + std::get<1>( altitude[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 180, 0 ), 1, cv::LINE_8, 0 );
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_YAW + std::get<2>( altitude[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_YAW + std::get<2>( altitude[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 0, 200 ), 1, cv::LINE_8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_YAW + std::get<0>( altitude[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_YAW + std::get<0>( altitude[i + 1] ) * AMPLIAR_Y ), CV_RGB( 200, 0, 0 ), 1, 8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_YAW + std::get<1>( altitude[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_YAW + std::get<1>( altitude[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 180, 0 ), 1, 8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_YAW + std::get<2>( altitude[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_YAW + std::get<2>( altitude[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 0, 200 ), 1, 8, 0 );
 
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_YAW + std::get<3>( altitude[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_YAW + std::get<3>( altitude[i + 1] ) * AMPLIAR_Y ), CV_RGB( 200, 200, 0 ), 2, cv::LINE_8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_YAW + std::get<3>( altitude[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_YAW + std::get<3>( altitude[i + 1] ) * AMPLIAR_Y ), CV_RGB( 200, 200, 0 ), 2, 8, 0 );
     }
 
     cv::putText( frame, "proportional", cv::Point( 10, 10 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 255, 0, 0 ) );
@@ -237,13 +237,13 @@ void update_graphics_frame( cv::Mat& frame, VectorPIDValues pitch, VectorPIDValu
     cv::putText( frame, "ROLL", cv::Point( 10, CENTRO_Y_ROLL - AMPLIAR_Y2 + 20 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 200, 200, 0 ) );
     cv::putText( frame, "ALTITUDE", cv::Point( 10, CENTRO_Y_YAW - AMPLIAR_Y2 + 20 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 200, 200, 0 ) );
 
-    cv::line( frame, cv::Point( frame.size().width - 100, 55 ), cv::Point( frame.size().width - 10, 55 ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( frame.size().width - 100, 55 ), cv::Point( frame.size().width - 10, 55 ), CV_RGB( 0, 0, 0 ), 2, 8, 0 );
 
-    cv::line( frame, cv::Point( frame.size().width - 55, 10 ), cv::Point( frame.size().width - 55, 100 ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( frame.size().width - 55, 10 ), cv::Point( frame.size().width - 55, 100 ), CV_RGB( 0, 0, 0 ), 2, 8, 0 );
 
-    cv::circle( frame, cv::Point( frame.size().width - 55 + std::get<4>( roll.back() ) * 5, 55 ), 4, CV_RGB( 255, 0, 255 ), -1, cv::LINE_8, 0 );
+    cv::circle( frame, cv::Point( frame.size().width - 55 + std::get<4>( roll.back() ) * 5, 55 ), 4, CV_RGB( 255, 0, 255 ), -1, 8, 0 );
 
-    cv::circle( frame, cv::Point( frame.size().width - 55, 55 - std::get<4>( pitch.back() ) * 5 ), 4, CV_RGB( 255, 0, 0 ), -1, cv::LINE_8, 0 );
+    cv::circle( frame, cv::Point( frame.size().width - 55, 55 - std::get<4>( pitch.back() ) * 5 ), 4, CV_RGB( 255, 0, 0 ), -1, 8, 0 );
 
 }
 
@@ -262,10 +262,10 @@ void update_robot_debug_frame( cv::Mat& frame, VectorPIDValues roll, VectorPIDVa
     int width = ( frame.cols - ( frame.cols * ( ALT_CAMERA - std::get<4>( altitude.back() ) ) / ALT_CAMERA ) ) / 2;
     int height = ( frame.rows - ( frame.rows * ( ALT_CAMERA - std::get<4>( altitude.back() ) ) / ALT_CAMERA ) ) / 2;
 
-    cv::line( frame, cv::Point( width, height ), cv::Point( frame.cols - width, height ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
-    cv::line( frame, cv::Point( width, height ), cv::Point( width, frame.rows - height ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
-    cv::line( frame, cv::Point( frame.cols - width, height ), cv::Point( frame.cols - width, frame.rows - height ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
-    cv::line( frame, cv::Point( width, frame.rows - height ), cv::Point( frame.cols - width, frame.rows - height ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
+    cv::line( frame, cv::Point( width, height ), cv::Point( frame.cols - width, height ), CV_RGB( 0, 0, 0 ), 2, 8, 0 );
+    cv::line( frame, cv::Point( width, height ), cv::Point( width, frame.rows - height ), CV_RGB( 0, 0, 0 ), 2, 8, 0 );
+    cv::line( frame, cv::Point( frame.cols - width, height ), cv::Point( frame.cols - width, frame.rows - height ), CV_RGB( 0, 0, 0 ), 2, 8, 0 );
+    cv::line( frame, cv::Point( width, frame.rows - height ), cv::Point( frame.cols - width, frame.rows - height ), CV_RGB( 0, 0, 0 ), 2, 8, 0 );
     // ------------------------------
 
     // ------------------------------
@@ -388,7 +388,7 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
     pt.y = posPx.y + pt.y;
     pt.x = posPx.x + 2 + pt.x;
 
-    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 255, 0, 0 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 255, 0, 0 ), 1, 8, 0 );
 
     //roll set
     //desde
@@ -409,7 +409,7 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
     pt.x = posPx.x + pt.x;
     pt.y = posPx.y + 2 + pt.y;
 
-    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 255, 0, 0 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 255, 0, 0 ), 1, 8, 0 );
 
     //********** seteo las inclinaciones *********
     //pitch value
@@ -431,7 +431,7 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
     pt.y = pt2.y + pt.y;
     pt.x = pt2.x + pt.x;
 
-    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 255 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 255 ), 1, 8, 0 );
 
     //roll value
     //desde
@@ -452,7 +452,7 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
     pt.x = pt2.x + pt.x;
     pt.y = pt2.y + pt.y;
 
-    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 255 ), 1, cv::LINE_8, 0 );
+    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 255 ), 1, 8, 0 );
 
     //dibujo el robot
     //linea 1
@@ -475,7 +475,7 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
 
     pt2.x = posPx.x + pt2.x;
     pt2.y = posPx.y + pt2.y;
-    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
+    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 0 ), 2, 8, 0 );
 
     //linea 2
     //punto1
@@ -495,6 +495,6 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
 
     pt2.x = posPx.x + pt2.x;
     pt2.y = posPx.y + pt2.y;
-    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 0 ), 2, cv::LINE_8, 0 );
+    cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 0 ), 2, 8, 0 );
 
 }
