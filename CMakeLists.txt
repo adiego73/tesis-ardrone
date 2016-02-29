@@ -4,15 +4,19 @@ project(tesis-ardrone CXX)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
 
+SET(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} "/opt/boost_1_57_0/include")
+SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "/opt/boost_1_57_0/lib")
+
+set(Boost_USE_STATIC_LIBS   ON)
+set(Boost_USE_MULTITHREADED ON) 
+
 add_subdirectory(src)
 
 set(USER_LIB_PATH "/usr/local/lib")
-set(BOOST_LIB_PATH "/opt/boost_1_57_0/lib")
-set(FFMPEG_LIB_PATH "/opt/ffmpeg/lib")
 
 include_directories(./includes/ 
                     /usr/local/include 
-                    /opt/boost_1_57_0/include 
+                    ${Boost_INCLUDE_DIRS} 
                     /usr/local/include/opencv 
                     /usr/local/include/opencv2 )
                     
@@ -30,20 +34,16 @@ add_executable(tesis-ardrone main.cpp
                              src/classes/environment_configuration.cpp
                 )
 
-# pthread
-#find_library(PTHREAD_LIB NAMES pthread)
-
 # opencv
 find_package( OpenCV REQUIRED )
 
+
 # boost
-find_library(BOOST_THREAD_LIB NAMES boost_thread PATHS ${BOOST_LIB_PATH})
-find_library(BOOST_SYSTEM_LIB NAMES boost_system PATHS ${BOOST_LIB_PATH})
+find_package(Boost 1.57.0 REQUIRED COMPONENTS system thread chrono)
 
 target_link_libraries(tesis-ardrone ${CMAKE_DL_LIBS} 
                                     ${OpenCV_LIBS}
-                                    ${BOOST_THREAD_LIB} 
-                                    ${BOOST_SYSTEM_LIB} 
+                                    ${Boost_LIBRARIES}
                                     )         
 
 install(TARGETS tesis-ardrone DESTINATION bin/)
