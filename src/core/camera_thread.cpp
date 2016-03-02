@@ -5,9 +5,12 @@ using namespace tesis;
 void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_ptr<Environment> env, boost::shared_ptr<VideoData> videoData )
 {
     std::cout << "camera thread" << std::endl;
-    
+
     bool quit = false;
-    bool autocontrol = false; 
+    bool autocontrol = false;
+    bool start_count = true;
+    bool autocontrol_go_next_destination = false;
+
 
     messageServer->announce( "camera/robot_position/x" );
     messageServer->announce( "camera/robot_position/y" );
@@ -30,16 +33,17 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     while( !quit )
     {
         // I think this is the simplest way to pass the frame to the gui thread.
-        env->updateFrame(videoData);
-        
-        if (trackDestinations >= 10)
+        env->updateFrame( videoData );
+
+        if( trackDestinations >= 10 )
         {
             env->trackDestinations();
             destinations = env->getDestinations();
             trackDestinations = 0;
         }
+
         trackDestinations++;
-        
+
         auto end = std::chrono::high_resolution_clock::now();
 
         auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>( end - start );
@@ -72,19 +76,41 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
         robot_visible = env->isRobotVisible() ? "true" : "false";
 
         messageServer->publish( "camera/robot_found", robot_visible );
-        
-        bool go_next_destination;
-        std::string go_next_destination_str = messageServer->get( "gui/go_next_destination", "true");
-        std::istringstream( go_next_destination_str ) >> std::boolalpha >> go_next_destination;
 
-        if (autocontrol)
+        bool gui_go_next_destination;
+        std::string go_next_destination_str = messageServer->get( "gui/go_next_destination", "true" );
+        std::istringstream( go_next_destination_str ) >> std::boolalpha >> gui_go_next_destination;
+
+        if( autocontrol )
         {
-            // Calcular distancia y tomar el tiempo siempre que la distancia sea menor que X 
-            // robot_position y env.getNextDestination()
-            
+            Point next_dest = env->getNextDestination();
+            float distance = Util::distance( robot_position, next_dest );
+
+            // if distance between robot and destination is <= 50
+            if( robot_position.x != -1 && distance <=  50 )
+            {
+                if( start_count )
+                {
+                    auto start_time = std::chrono::high_resolution_clock::now();
+                    start_count = false;
+                }
+
+                auto end_time = std::chrono::high_resolution_clock::now();
+                auto elapsed_time_over_spot = std::chrono::duration_cast<std::chrono::seconds>( end - start );
+
+                if( elapsed_time_over_spot.count() >= 2)
+                {
+                    autocontrol_go_next_destination = true;
+                }
+            }
+            else
+            {
+                start_count = true;
+                autocontrol_go_next_destination = false;
+            }
         }
-        
-        if( go_next_destination )
+
+        if( gui_go_next_destination || autocontrol_go_next_destination )
         {
             Point next_destination = env->nextDestination();
 
@@ -92,6 +118,7 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
             messageServer->publish( "camera/destination/y", std::to_string( next_destination.y ) );
             messageServer->publish( "camera/destination/z", std::to_string( next_destination.z ) );
             messageServer->publish( "camera/destination/id", std::to_string( next_destination.z ) );
+
 	    // TODO esto es un hack. GUI deberia publicar sus propios mensajes.
             messageServer->publish( "gui/go_next_destination", "false" );
         }

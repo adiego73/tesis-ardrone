@@ -1,8 +1,9 @@
 #include "core/threads.hpp"
 #include "util/keys.hpp"
 #include <string>
+
 using namespace tesis;
-using namespace std;
+
 #ifndef START
 # define START   90
 #endif
@@ -29,28 +30,6 @@ using namespace std;
 
 #ifndef CENTRO_Y_YAW
 # define CENTRO_Y_YAW    (START + AMPLIAR_Y2 * 5)
-#endif
-
-#ifndef CF_WHITE
-#define CF_WHITE CV_RGB(255,255,255)
-#endif
-#ifndef CF_BLACK
-#define CF_BLACK CV_RGB(0,0,0)
-#endif
-#ifndef CF_RED
-#define CF_RED CV_RGB(255,0,0)
-#endif
-#ifndef CF_BLUE
-#define CF_BLUE CV_RGB(0, 0, 255)
-#endif
-#ifndef CF_GREEN
-#define CF_GREEN CV_RGB(0, 255, 0)
-#endif
-#ifndef CF_YELLOW
-#define CF_YELLOW CV_RGB(255, 255, 0)
-#endif
-#ifndef CF_PURPLE
-#define CF_PURPLE CV_RGB(255, 0, 255)
 #endif
 
 // indice 0: kp,
@@ -303,6 +282,7 @@ void update_robot_debug_frame( cv::Mat& frame, VectorPIDValues roll, VectorPIDVa
 	    
         draw_cross( p, 1 );
     }
+
     // ------------------------------
 
     // ------------------------------
@@ -314,19 +294,17 @@ void update_robot_debug_frame( cv::Mat& frame, VectorPIDValues roll, VectorPIDVa
 	
       draw_cross( p, 2 );
     }
-    // -----------------------------
-
-    // ------------------------------
     // ROBOT
-    Point r_position = env->getRobotPostionNormalized(std::get <4>(altitude.back()));
+    Point r_position = env->getRobotPostionNormalized( std::get <4>( altitude.back() ) );
     draw_robot( frame, env, roll, pitch, yaw, position, velocity );
 	
     write_robot_info( frame, roll, pitch, yaw, altitude, env, position, velocity, messageServer );
-	
+
     // ------------------------------
 }
 void write_robot_info( cv::Mat& frame, VectorPIDValues roll, VectorPIDValues pitch, VectorPIDValues yaw, VectorPIDValues altitude, boost::shared_ptr<Environment> env, Point position, Velocity velocity, boost::shared_ptr<MessageServer> messageServer )
 {
+  
 // informacion en la pantalla.
 	string line1 = cv::format("SET-> Pitch: %.3f, Roll: %.3f, Yaw: %.3f, Z: %.3f, Dist: %.1f, D_x: %.1f, D_y: %.1f",
 			std::get<3>( pitch.back() ), std::get<3>( roll.back() ),
@@ -362,6 +340,7 @@ void write_robot_info( cv::Mat& frame, VectorPIDValues roll, VectorPIDValues pit
 	cv::putText( frame, line4, cv::Point(10, 70), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_BLACK );
 	cv::putText( frame, line5, cv::Point(10, 90), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_BLACK );
 	//cv::putText( frame, line6, cv::Point(10, 110), CV_FONT_HERSHEY_SIMPLEX, 0.4, BLACK );
+
 }
 
 void update_vector_pid_values( boost::shared_ptr<MessageServer> server, VectorPIDValues& pitch, VectorPIDValues& roll, VectorPIDValues& yaw, VectorPIDValues& altitude, Point& position, Velocity& velocity )
@@ -544,7 +523,7 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
     pt2.y = 0;
 
 //     std::cout << yaw_value << std::endl;
-    
+
     pt2 = Util::rotate( pt2, yaw_value );
 
     pt2.x = posPx.x + pt2.x;
