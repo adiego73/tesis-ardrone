@@ -17,10 +17,13 @@ void Environment::trackDestinations()
     {
         Color destination = this->env_config.safe_spot[i];
         Point p = this->video_camera->trackColor( destination );
-        p.z = i;
+        
 
         if( p.x != -1 || p.y !=  -1 )
         {
+	    p = Util::ipoint_to_rpoint( p, this->video_camera->getFrameSize(), this->env_config.space );
+	    p.z = i;
+	    
             int e = 0;
 
             // find safe spot position
@@ -105,7 +108,8 @@ Point Environment::nextDestination()
         ret.y = -1;
         return ret;
     }
-
+    this->next_destination++;
+    
     if( this->next_destination >= this->safe_spots.size() )
     {
         this->next_destination = 0;
@@ -113,7 +117,7 @@ Point Environment::nextDestination()
 
     Point next_destination = this->safe_spots[this->next_destination];
 
-    this->next_destination++;
+    
 
     return next_destination;
 }
@@ -137,7 +141,14 @@ Size Environment::getConfigurationSpaceSize()
 
 Point Environment::getNextDestination()
 {
-    return this->safe_spots[this->next_destination];
+  if (this->safe_spots.size() > this->next_destination)
+      return this->safe_spots[this->next_destination];
+  else  {
+        Point ret;
+        ret.x = -1;
+        ret.y = -1;
+        return ret;
+   }
 }
 
 Point Environment::getRobotPosition()
