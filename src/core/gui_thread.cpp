@@ -75,6 +75,7 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
     messageServer->announce( "gui/finish" );
     messageServer->announce( "gui/go_next_destination" );
     messageServer->announce( "robot/onground" );
+
     while( !quit )
     {
         frame = videoProxy->readFrame();
@@ -145,8 +146,8 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
                 messageServer->publish( "gui/action/land", "true" );
                 break;
             }
-	    
-	    
+
+
             case key::T:
             {
                 std::vector<std::string> topics = messageServer->topics();
@@ -274,12 +275,12 @@ void update_robot_debug_frame( cv::Mat& frame, VectorPIDValues roll, VectorPIDVa
     cv::Size size;
     size.width = frame.cols;
     size.height = frame.rows;
-    
+
     // DESTINATIONS
     for( Point dest : env->getDestinations() )
     {
-	Point p = Util::rpoint_to_ipoint( dest, size, env->getConfigurationSpaceSize());
-	    
+        Point p = Util::rpoint_to_ipoint( dest, size, env->getConfigurationSpaceSize() );
+
         draw_cross( p, 1 );
     }
 
@@ -287,59 +288,57 @@ void update_robot_debug_frame( cv::Mat& frame, VectorPIDValues roll, VectorPIDVa
 
     // ------------------------------
     // NEXT DESTINATION
-    if(env->getDestinations().size() != 0)
+    if( env->getDestinations().size() != 0 )
     {
-      Point next_dest = env->getNextDestination();
-      Point p = Util::rpoint_to_ipoint( next_dest, size, env->getConfigurationSpaceSize());
-	
-      draw_cross( p, 2 );
+        Point next_dest = env->getNextDestination();
+        Point p = Util::rpoint_to_ipoint( next_dest, size, env->getConfigurationSpaceSize() );
+
+        draw_cross( p, 2 );
     }
+
     // ROBOT
     Point r_position = env->getRobotPostionNormalized( std::get <4>( altitude.back() ) );
     draw_robot( frame, env, roll, pitch, yaw, position, velocity );
-	
+
     write_robot_info( frame, roll, pitch, yaw, altitude, env, position, velocity, messageServer );
 
     // ------------------------------
 }
 void write_robot_info( cv::Mat& frame, VectorPIDValues roll, VectorPIDValues pitch, VectorPIDValues yaw, VectorPIDValues altitude, boost::shared_ptr<Environment> env, Point position, Velocity velocity, boost::shared_ptr<MessageServer> messageServer )
 {
-  
+
 // informacion en la pantalla.
-	string line1 = cv::format("SET-> Pitch: %.3f, Roll: %.3f, Yaw: %.3f, Z: %.3f, Dist: %.1f, D_x: %.1f, D_y: %.1f",
-			std::get<3>( pitch.back() ), std::get<3>( roll.back() ),
-			std::get<3>( yaw.back() ), std::get<3>( altitude.back() ),
-			sqrt(pow(env->getNextDestination().x - position.x, 2) + pow(env->getNextDestination().y - position.y, 2)), 
-			env->getNextDestination().x - position.x, env->getNextDestination().y - position.y);
-	
-	string line2 = cv::format(
-			"GET--> Pitch: %.3f , Roll: %.3f, Yaw: %.3f, Altitude: %.1f cm",
-			std::get<4>( pitch.back() ), std::get<4>( roll.back() ),
-			std::get<4>( yaw.back() ), std::get<4>( altitude.back() ));
-	string line3 = cv::format(
-			"Vel-Y: %.3f, Vel-X: %.3f, Vel-Z: %.3f cm/s",
-			velocity.y, velocity.x, velocity.z);
-	/*string line4 = cv::format("Battery: %d %%, State: %s",
-			threadAttr->data.copterValues.battery, threadAttr->data.copterValues.ctrl_state_sz.c_str());
-*/	
-	string line4 = cv::format("Destino: X: %.1f, Y: %.1f Bateria: %d &&",
-			 env->getNextDestination().x, env->getNextDestination().y,
-			 messageServer->getInt("robot/battery", 0));
+    std::string line1 = cv::format( "SET-> Pitch: %.3f, Roll: %.3f, Yaw: %.3f, Z: %.3f, Dist: %.1f, D_x: %.1f, D_y: %.1f",
+                                    std::get<3>( pitch.back() ), std::get<3>( roll.back() ),
+                                    std::get<3>( yaw.back() ), std::get<3>( altitude.back() ),
+                                    sqrt( pow( env->getNextDestination().x - position.x, 2 ) + pow( env->getNextDestination().y - position.y, 2 ) ),
+                                    env->getNextDestination().x - position.x, env->getNextDestination().y - position.y );
 
-	string line5 = cv::format("POSICION--> X: %.2f, Y: %.2f, Z: %.2f Tierra: %s Estado: %d AutoControl: %s",
-			position.x, position.y, position.z, (messageServer->getInt( "robot/onground", 1 ) == 1) ? "Land" : "TakeOff", 
-			messageServer->getLong( "robot/state", 0 ),
-			messageServer->get( "gui/action/autocontrol", "false" ).c_str());
-                
-	 
-	//string line6 = cv::format("tiempo chekpoint: %d", msChangeDestination);
+    std::string line2 = cv::format(
+                            "GET--> Pitch: %.3f , Roll: %.3f, Yaw: %.3f, Altitude: %.1f cm",
+                            std::get<4>( pitch.back() ), std::get<4>( roll.back() ),
+                            std::get<4>( yaw.back() ), std::get<4>( altitude.back() ) );
+    std::string line3 = cv::format(
+                            "Vel-Y: %.3f, Vel-X: %.3f, Vel-Z: %.3f cm/s",
+                            velocity.y, velocity.x, velocity.z );
 
-	cv::putText( frame, line1, cv::Point(10, 10), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_RED );
-	cv::putText( frame, line2, cv::Point(10, 30), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_BLUE );
-	cv::putText( frame, line3, cv::Point(10, 50), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_BLUE);
-	cv::putText( frame, line4, cv::Point(10, 70), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_BLACK );
-	cv::putText( frame, line5, cv::Point(10, 90), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_BLACK );
-	//cv::putText( frame, line6, cv::Point(10, 110), CV_FONT_HERSHEY_SIMPLEX, 0.4, BLACK );
+    std::string line4 = cv::format( "Destino: X: %.1f, Y: %.1f Bateria: %d &&",
+                                    env->getNextDestination().x, env->getNextDestination().y,
+                                    messageServer->getInt( "robot/battery", 0 ) );
+
+    std::string line5 = cv::format( "POSICION--> X: %.2f, Y: %.2f, Z: %.2f Tierra: %s Estado: %d AutoControl: %s",
+                                    position.x, position.y, position.z, ( messageServer->getInt( "robot/onground", 1 ) == 1 ) ? "Land" : "TakeOff",
+                                    messageServer->getLong( "robot/state", 0 ),
+                                    messageServer->get( "gui/action/autocontrol", "false" ).c_str() );
+
+    //string line6 = cv::format("tiempo chekpoint: %d", msChangeDestination);
+
+    cv::putText( frame, line1, cv::Point( 10, 10 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 255, 0, 0 ) );
+    cv::putText( frame, line2, cv::Point( 10, 30 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 0, 0, 255 ) );
+    cv::putText( frame, line3, cv::Point( 10, 50 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 0, 0, 255 ) );
+    cv::putText( frame, line4, cv::Point( 10, 70 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 0, 0, 0 ) );
+    cv::putText( frame, line5, cv::Point( 10, 90 ), CV_FONT_HERSHEY_SIMPLEX, 0.4, CV_RGB( 0, 0, 0 ) );
+    //cv::putText( frame, line6, cv::Point(10, 110), CV_FONT_HERSHEY_SIMPLEX, 0.4, BLACK );
 
 }
 
@@ -409,7 +408,7 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
     float yaw_value = std::get<4>( yaw.back() );
     float pitch_set = std::get<3>( pitch.back() );
     float roll_set = std::get<3>( roll.back() );
-  
+
     cv::Size size;
     size.width = frame.cols;
     size.height = frame.rows;
