@@ -9,6 +9,7 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     bool quit = false;
     bool autocontrol = false;
     bool start_count = true;
+    auto start_time = std::chrono::high_resolution_clock::now();
     bool autocontrol_go_next_destination = false;
 
 
@@ -89,14 +90,14 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
             {
                 if( start_count )
                 {
-                    auto start_time = std::chrono::high_resolution_clock::now();
+                    start_time = std::chrono::high_resolution_clock::now();
                     start_count = false;
                 }
 
                 auto end_time = std::chrono::high_resolution_clock::now();
-                auto elapsed_time_over_spot = std::chrono::duration_cast<std::chrono::seconds>( end - start );
+                auto elapsed_time_over_spot = std::chrono::duration_cast<std::chrono::seconds>( end_time - start_time );
 
-                if( elapsed_time_over_spot.count() >= 2)
+                if( elapsed_time_over_spot.count() >= 2 )
                 {
                     autocontrol_go_next_destination = true;
                 }
