@@ -58,6 +58,47 @@ void MessageServer::publish( std::string topic, std::string message )
     }
 }
 
+float MessageServer::getFloat( std::string topic )
+{
+  std::string value = this->get( topic);
+  return std::stof( value );
+}
+float MessageServer::getFloat( std::string topic, float default_value )
+{
+  std::string value = this->get( topic, std::to_string(default_value));
+  return std::stof( value );
+}
+int MessageServer::getInt( std::string topic )
+{
+  std::string value = this->get( topic);
+  return std::stod( value );
+}
+int MessageServer::getInt( std::string topic, int default_value )
+{
+  std::string value = this->get( topic, std::to_string(default_value));
+  return std::stod( value );
+}
+long MessageServer::getLong( std::string topic )
+{
+  std::string value = this->get( topic);
+  return std::stol( value );
+}
+long MessageServer::getLong( std::string topic, long default_value )
+{
+  std::string value = this->get( topic, std::to_string(default_value));
+  return std::stol( value );
+}
+
+bool MessageServer::getBool( std::string topic )
+{
+  return this->get( topic).find( "false" ) == std::string::npos;
+}
+
+bool MessageServer::getBool( std::string topic, bool default_value )
+{
+  return this->get( topic, default_value == 0 ? "false": "true").find( "false" ) == std::string::npos;
+}
+
 // Get all announced topics
 std::vector<std::string> MessageServer::topics()
 {

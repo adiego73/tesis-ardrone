@@ -34,48 +34,48 @@
                 "max": 19
             },
             "Saturation": {
-                "min": 160,
-                "max": 212
+                "min": 70,
+                "max": 255
             },
             "Value": {
                 "min": 168,
-                "max": 224
+                "max": 255
             }
         },
         {
             "Hue": {
-                "min": 88,
-                "max": 102
+                "min": 94,
+                "max": 100
             },
             "Saturation": {
-                "min": 102,
-                "max": 154
+                "min": 101,
+                "max": 155
             },
             "Value": {
-                "min": 74,
-                "max": 127
+                "min": 83,
+                "max": 172
             }
         }
     ],
     "unsafe_spot": [],
     "robot_id": {
         "Hue": {
-            "min": 161,
+            "min": 155,
             "max": 179
         },
         "Saturation": {
-            "min": 57,
+            "min": 89,
             "max": 255
         },
         "Value": {
-            "min": 0,
+            "min": 95,
             "max": 255
         }
     },
     "camera_height": 3,
-    "camera_number": 1,
+    "camera_number": 0,
     "space" : {
-        "height": 300.0,
-        "width": 400.0
+        "height": 400.0,
+        "width": 510.0
     }
 }

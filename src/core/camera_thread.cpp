@@ -18,6 +18,8 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     messageServer->announce( "camera/robot_position/z" );
     messageServer->announce( "camera/destination/x" );
     messageServer->announce( "camera/destination/y" );
+    messageServer->announce( "camera/destination/z" );
+    messageServer->announce( "camera/destination/id" );
     messageServer->announce( "camera/robot_found" );
     messageServer->announce( "camera/elapsed_time" );
 
@@ -115,8 +117,10 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
 
             messageServer->publish( "camera/destination/x", std::to_string( next_destination.x ) );
             messageServer->publish( "camera/destination/y", std::to_string( next_destination.y ) );
+            messageServer->publish( "camera/destination/z", std::to_string( next_destination.z ) );
+            messageServer->publish( "camera/destination/id", std::to_string( next_destination.z ) );
 
-            // TODO esto es un hack. GUI deberia publicar sus propios mensajes.
+	    // TODO esto es un hack. GUI deberia publicar sus propios mensajes.
             messageServer->publish( "gui/go_next_destination", "false" );
         }
 
