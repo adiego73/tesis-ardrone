@@ -4,15 +4,6 @@ project(tesis-ardrone CXX)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
 
-<<<<<<< HEAD
-=======
-set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} "/opt/boost_1_57_0/include")
-set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "/opt/boost_1_57_0/lib")
-    
-set(Boost_USE_STATIC_LIBS   ON)
-set(Boost_USE_MULTITHREADED ON)
-
->>>>>>> 62acaae9b8367e23adc5e5b812103435d8e2a3c3
 add_subdirectory(src)
 
 set(USER_LIB_PATH "/usr/local/lib")
