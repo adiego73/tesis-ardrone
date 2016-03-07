@@ -24,30 +24,42 @@ void EnvironmentConfiguration::parse()
         property_tree::read_json( this->path, ptree );
 
         Size space_size;
-        Color robot_id;
-        Range r_hue;
-        Range r_saturation;
-        Range r_value;
 
-        r_hue.min = ptree.get( "robot_id.Hue.min", 0 );
-        r_hue.max = ptree.get( "robot_id.Hue.max", 0 );
+	//busco varios colores para el robot.
+	// We are not considering unsafe spots yet.
+        BOOST_FOREACH( property_tree::ptree::value_type & val, ptree.get_child( "robot_id" ) )
+        {
+            property_tree::ptree child = val.second;
+	    
+	    
+	    Color robot_id;
+	    Range r_hue;
+	    Range r_saturation;
+	    Range r_value;
 
-        r_saturation.min = ptree.get( "robot_id.Saturation.min", 0 );
-        r_saturation.max = ptree.get( "robot_id.Saturation.max", 0 );
+	    r_hue.min = child.get( "Hue.min", 0 );
+	    r_hue.max = child.get( "Hue.max", 0 );
 
-        r_value.min = ptree.get( "robot_id.Value.min", 0 );
-        r_value.max = ptree.get( "robot_id.Value.max", 0 );
+	    r_saturation.min = child.get( "Saturation.min", 0 );
+	    r_saturation.max = child.get( "Saturation.max", 0 );
 
-        robot_id.Hue = r_hue;
-        robot_id.Saturation = r_saturation;
-        robot_id.Value = r_value;
+	    r_value.min = child.get( "Value.min", 0 );
+	    r_value.max = child.get( "Value.max", 0 );
 
+	    robot_id.Hue = r_hue;
+	    robot_id.Saturation = r_saturation;
+	    robot_id.Value = r_value;
+	    
+	    config.robot_id.push_back( robot_id );
+	}
+	
         space_size.height = ptree.get<float>("space.height");
         space_size.width = ptree.get<float>("space.width");
         
         config.camera_height = ptree.get<float>( "camera_height" );
         config.camera_number = ptree.get( "camera_number", 0 );
-        config.robot_id = robot_id;
+	config.path_videos = ptree.get( "path_videos", "" );
+	 //     config.robot_id = robot_id;
         config.space = space_size;
         
         // We are not considering unsafe spots yet.

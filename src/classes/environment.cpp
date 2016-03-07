@@ -16,9 +16,18 @@ void Environment::trackDestinations()
     for( int i = 0; i < this->env_config.safe_spot.size(); i++ )
     {
         Color destination = this->env_config.safe_spot[i];
-        Point p = this->video_camera->trackColor( destination );
-        
-
+        //Point p = this->video_camera->trackColor( destination );
+        Point p;//color hardcodeado
+	if(i == 0)
+	{
+	  p.x = 220;
+	  p.y = 140;
+	}
+	else if(i == 1)
+	{
+	  p.x = 420;
+	  p.y = 340;
+	}
         if( p.x != -1 || p.y !=  -1 )
         {
 	    p = Util::ipoint_to_rpoint( p, this->video_camera->getFrameSize(), this->env_config.space );
@@ -51,8 +60,12 @@ std::vector< Point > Environment::getDestinations()
 
 Point Environment::trackRobotPosition()
 {
-    Point position = this->video_camera->trackColor( this->env_config.robot_id );
-
+    Point position;
+    if(this->env_config.robot_id.size() == 1)
+	position = this->video_camera->trackColor( this->env_config.robot_id[0] );
+    else if(this->env_config.robot_id.size() == 2)
+    	position = this->video_camera->trackColor( this->env_config.robot_id[0], this->env_config.robot_id[1] );
+    
     this->robot_position = position;
 
     return position;
@@ -129,6 +142,11 @@ void Environment::updateFrame( boost::shared_ptr< VideoData > videoProxy )
     videoProxy->updateFrame( this->video_camera->getFrame() );
 }
 
+void Environment::updateMorphology( boost::shared_ptr< VideoData > videoProxy )
+{
+    videoProxy->updateMorphology( this->video_camera->getMorphology() );
+}
+
 float Environment::getConfigurationCameraHeight()
 {
     return this->camera_height;
@@ -137,6 +155,11 @@ float Environment::getConfigurationCameraHeight()
 Size Environment::getConfigurationSpaceSize()
 {
     return this->env_config.space;
+}
+
+std::string Environment::getVideosPath()
+{
+    return this->env_config.path_videos;
 }
 
 Point Environment::getNextDestination()

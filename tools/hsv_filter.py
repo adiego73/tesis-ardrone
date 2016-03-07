@@ -24,8 +24,8 @@ def main(argv):
     h_max,s_max,v_max = 180,255,255
 
     # Creating track bar
-    cv2.createTrackbar('H max', 'result',0,179,nothing)
-    cv2.createTrackbar('H min', 'result',0,179,nothing)
+    cv2.createTrackbar('H max', 'result',0,180,nothing)
+    cv2.createTrackbar('H min', 'result',0,180,nothing)
     cv2.createTrackbar('S max', 'result',0,255,nothing)
     cv2.createTrackbar('S min', 'result',0,255,nothing)
     cv2.createTrackbar('V max', 'result',0,255,nothing)

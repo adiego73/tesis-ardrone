@@ -9,8 +9,8 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     bool quit = false;
     bool autocontrol = false;
     bool start_count = true;
+    auto start_time = std::chrono::high_resolution_clock::now();
     bool autocontrol_go_next_destination = false;
-
 
     messageServer->announce( "camera/robot_position/x" );
     messageServer->announce( "camera/robot_position/y" );
@@ -34,7 +34,8 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     {
         // I think this is the simplest way to pass the frame to the gui thread.
         env->updateFrame( videoData );
-
+	env->updateMorphology( videoData );
+	
         if( trackDestinations >= 10 )
         {
             env->trackDestinations();
@@ -113,15 +114,13 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
         if( gui_go_next_destination || autocontrol_go_next_destination )
         {
             Point next_destination = env->nextDestination();
-
-            messageServer->publish( "camera/destination/x", std::to_string( next_destination.x ) );
-            messageServer->publish( "camera/destination/y", std::to_string( next_destination.y ) );
-            messageServer->publish( "camera/destination/z", std::to_string( next_destination.z ) );
-            messageServer->publish( "camera/destination/id", std::to_string( next_destination.z ) );
-
 	    // TODO esto es un hack. GUI deberia publicar sus propios mensajes.
             messageServer->publish( "gui/go_next_destination", "false" );
         }
+	messageServer->publish( "camera/destination/x", std::to_string( env->getNextDestination().x ) );
+	messageServer->publish( "camera/destination/y", std::to_string( env->getNextDestination().y ) );
+	messageServer->publish( "camera/destination/z", std::to_string( env->getNextDestination().z ) );
+	messageServer->publish( "camera/destination/id", std::to_string( env->getNextDestination().z ) );
 
         std::string finish_msg = messageServer->get( "gui/finish", "false" );
         std::istringstream( finish_msg ) >> std::boolalpha >> quit;

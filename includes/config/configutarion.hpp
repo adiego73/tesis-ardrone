@@ -30,10 +30,12 @@ struct EnvironmentConfig
 {
     std::vector< Color > safe_spot;
     std::vector< Color > unsafe_spot;
-    Color robot_id;
+    std::vector< Color > robot_id;
+    //Color robot_id;
     float camera_height;
     int camera_number;
     Size space;
+    std::string path_videos;
 };
 
 };

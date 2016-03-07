@@ -1,9 +1,10 @@
 #include "core/threads.hpp"
 #include "util/keys.hpp"
 #include <string>
+#include <sys/time.h>
 
 using namespace tesis;
-
+using namespace std;
 #ifndef START
 # define START   90
 #endif
@@ -32,6 +33,28 @@ using namespace tesis;
 # define CENTRO_Y_YAW    (START + AMPLIAR_Y2 * 5)
 #endif
 
+#ifndef CF_WHITE
+#define CF_WHITE CV_RGB(255,255,255)
+#endif
+#ifndef CF_BLACK
+#define CF_BLACK CV_RGB(0,0,0)
+#endif
+#ifndef CF_RED
+#define CF_RED CV_RGB(255,0,0)
+#endif
+#ifndef CF_BLUE
+#define CF_BLUE CV_RGB(0, 0, 255)
+#endif
+#ifndef CF_GREEN
+#define CF_GREEN CV_RGB(0, 255, 0)
+#endif
+#ifndef CF_YELLOW
+#define CF_YELLOW CV_RGB(255, 255, 0)
+#endif
+#ifndef CF_PURPLE
+#define CF_PURPLE CV_RGB(255, 0, 255)
+#endif
+
 // indice 0: kp,
 // indice 1: ki
 // indice 2: kd
@@ -45,12 +68,16 @@ void update_robot_debug_frame( cv::Mat& frame, VectorPIDValues roll, VectorPIDVa
 void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDValues roll, VectorPIDValues pitch, VectorPIDValues yaw, Point position, Velocity velocity );
 void update_vector_pid_values( boost::shared_ptr<MessageServer> server, VectorPIDValues& pitch, VectorPIDValues& roll, VectorPIDValues& yaw, VectorPIDValues& altitude, Point& position, Velocity& velocity );
 void write_robot_info( cv::Mat& frame, VectorPIDValues roll, VectorPIDValues pitch, VectorPIDValues yaw, VectorPIDValues altitude, boost::shared_ptr<Environment> env, Point position, Velocity velocity, boost::shared_ptr<MessageServer> messageServer );
+void grabar(cv::Mat&  robot, cv::Mat& graphics, cv::Mat& morphology, cv::VideoWriter& vw1, cv::VideoWriter& vw2, std::string path, std::string file_name);
 
 void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_ptr<Environment> env, boost::shared_ptr<VideoData> videoProxy )
 {
     bool quit;
     bool show_graphics = false;
+    bool bGrabar = false;
     cv::Mat frame;
+    cv::Mat morphology;
+    std::string morphology_name = "Morphology";
     std::string window_name = "Video Camera";
     std::string graphics_window_name = "PID Graphics - Debug";
     std::string robot_debug_window_name = "Robot and Safe spots - Debug";
@@ -62,11 +89,27 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
     Point robot_position;
     Velocity robot_velocity;
 
+    //	Writers para guardar videos
+    time_t rawtime;
+    struct tm * timeinfo;
+    char buffer[80];
+
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    strftime(buffer, 80, "%d-%m-%Y %I:%M:%S", timeinfo);
+    string file_name(buffer);
+
+    cv::VideoWriter outputVideo;
+    cv::VideoWriter outputVideo2;
+    cv::VideoWriter outputVideo3;
+    /*******************/
+    
     cv::namedWindow( window_name, cv::WINDOW_AUTOSIZE );
-
+    cv::namedWindow( morphology_name, cv::WINDOW_AUTOSIZE );
     frame = videoProxy->readFrame();
-
-    cv::imshow( window_name, frame );
+    frame = videoProxy->readMorphology();
+    
 
     messageServer->announce( "gui/action/takeoff" );
     messageServer->announce( "gui/action/land" );
@@ -74,12 +117,15 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
     messageServer->announce( "gui/action/emergency" );
     messageServer->announce( "gui/finish" );
     messageServer->announce( "gui/go_next_destination" );
+    messageServer->announce( "gui/grabar" );
     messageServer->announce( "robot/onground" );
     while( !quit )
     {
         frame = videoProxy->readFrame();
-
-        cv::imshow( window_name, frame );
+	morphology = videoProxy->readMorphology();
+	
+	cv::imshow( window_name, frame );
+	cv::imshow( morphology_name, morphology );
 
         if( show_graphics )
         {
@@ -93,6 +139,9 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
 
             cv::imshow( robot_debug_window_name, robot_debug_frame );
             cv::imshow( graphics_window_name, graphics_frame );
+	    
+	    if (bGrabar)
+	      grabar(robot_debug_frame, graphics_frame, morphology, outputVideo, outputVideo2, env->getVideosPath(), file_name);
         }
 
         int key_pressed = cv::waitKey( 1 );
@@ -168,6 +217,13 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
 
                 break;
             }
+            
+            case key::R:
+            {
+                bGrabar = bGrabar ? false : true;
+		messageServer->publish( "gui/grabar", bGrabar ? "true" : "false"  );
+                break;
+            }
         }
     }
 
@@ -187,7 +243,7 @@ void update_graphics_frame( cv::Mat& frame, VectorPIDValues pitch, VectorPIDValu
     //PUNTOS
     for( int i = 0; i < int( pitch.size() - 1 ); i++ )
     {
-        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<0>( pitch[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<0>( pitch[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 180, 0 ), 1, 8, 0 );
+        cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<0>( pitch[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<0>( pitch[i + 1] ) * AMPLIAR_Y ), CV_RGB( 200, 0, 0 ), 1, 8, 0 );
         cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<1>( pitch[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<1>( pitch[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 180, 0 ), 1, 8, 0 );
         cv::line( frame, cv::Point( i * AMPLIAR_X, CENTRO_Y_PITCH + std::get<2>( pitch[i] ) * AMPLIAR_Y ), cv::Point( ( i + 1 ) * AMPLIAR_X, CENTRO_Y_PITCH + std::get<2>( pitch[i + 1] ) * AMPLIAR_Y ), CV_RGB( 0, 0, 200 ), 1, 8, 0 );
 
@@ -306,32 +362,36 @@ void write_robot_info( cv::Mat& frame, VectorPIDValues roll, VectorPIDValues pit
 {
   
 // informacion en la pantalla.
-	string line1 = cv::format("SET-> Pitch: %.3f, Roll: %.3f, Yaw: %.3f, Z: %.3f, Dist: %.1f, D_x: %.1f, D_y: %.1f",
+	string line1 = cv::format("SET-> Pitch: %.2f, Roll: %.2f, Yaw: %.2f, Z: %.2f",
 			std::get<3>( pitch.back() ), std::get<3>( roll.back() ),
-			std::get<3>( yaw.back() ), std::get<3>( altitude.back() ),
-			sqrt(pow(env->getNextDestination().x - position.x, 2) + pow(env->getNextDestination().y - position.y, 2)), 
-			env->getNextDestination().x - position.x, env->getNextDestination().y - position.y);
+			std::get<3>( yaw.back() ), std::get<3>( altitude.back() ));
 	
 	string line2 = cv::format(
 			"GET--> Pitch: %.3f , Roll: %.3f, Yaw: %.3f, Altitude: %.1f cm",
 			std::get<4>( pitch.back() ), std::get<4>( roll.back() ),
 			std::get<4>( yaw.back() ), std::get<4>( altitude.back() ));
 	string line3 = cv::format(
-			"Vel-Y: %.3f, Vel-X: %.3f, Vel-Z: %.3f cm/s",
-			velocity.y, velocity.x, velocity.z);
+			"Vel-X: %.3f, Vel-Y: %.3f, Vel-Z: %.3f cm/s Bateria: %d%%, ",
+			velocity.x, velocity.y, velocity.z, messageServer->getInt("robot/battery", 0));
 	/*string line4 = cv::format("Battery: %d %%, State: %s",
 			threadAttr->data.copterValues.battery, threadAttr->data.copterValues.ctrl_state_sz.c_str());
 */	
-	string line4 = cv::format("Destino: X: %.1f, Y: %.1f Bateria: %d &&",
-			 env->getNextDestination().x, env->getNextDestination().y,
-			 messageServer->getInt("robot/battery", 0));
+	string line4 = cv::format("Destino: X: %.1f, Y: %.1f Dist: %d, Dx: %d, Dy: %d, Ang: %.2f, SPAng: %.2f",
+			env->getNextDestination().x, env->getNextDestination().y,
+			messageServer->getLong( "robot/destino/dist/total", 0),
+			messageServer->getLong( "robot/destino/dist/x", 0),
+			messageServer->getLong( "robot/destino/dist/y", 0),
+			messageServer->getFloat( "robot/destino/angulo", 0.),
+			messageServer->getFloat( "robot/destino/setpointyaw", 0.));
 
 	string line5 = cv::format("POSICION--> X: %.2f, Y: %.2f, Z: %.2f Tierra: %s Estado: %d AutoControl: %s",
 			position.x, position.y, position.z, (messageServer->getInt( "robot/onground", 1 ) == 1) ? "Land" : "TakeOff", 
 			messageServer->getLong( "robot/state", 0 ),
 			messageServer->get( "gui/action/autocontrol", "false" ).c_str());
                 
-	 
+	string line6 = cv::format("%s", 
+			messageServer->getBool( "gui/grabar", false ) ? "REC" : "");
+	
 	//string line6 = cv::format("tiempo chekpoint: %d", msChangeDestination);
 
 	cv::putText( frame, line1, cv::Point(10, 10), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_RED );
@@ -339,61 +399,62 @@ void write_robot_info( cv::Mat& frame, VectorPIDValues roll, VectorPIDValues pit
 	cv::putText( frame, line3, cv::Point(10, 50), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_BLUE);
 	cv::putText( frame, line4, cv::Point(10, 70), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_BLACK );
 	cv::putText( frame, line5, cv::Point(10, 90), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_BLACK );
+	cv::putText( frame, line6, cv::Point(10, 110), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_RED);
 	//cv::putText( frame, line6, cv::Point(10, 110), CV_FONT_HERSHEY_SIMPLEX, 0.4, BLACK );
 
 }
 
 void update_vector_pid_values( boost::shared_ptr<MessageServer> server, VectorPIDValues& pitch, VectorPIDValues& roll, VectorPIDValues& yaw, VectorPIDValues& altitude, Point& position, Velocity& velocity )
 {
-    if( pitch.size() >= 300 )
+    if( pitch.size() >= 200 )
         pitch.erase( pitch.begin() );
 
-    if( roll.size() >= 300 )
+    if( roll.size() >= 200 )
         roll.erase( roll.begin() );
 
-    if( yaw.size() >= 300 )
+    if( yaw.size() >= 200 )
         yaw.erase( yaw.begin() );
 
-    if( altitude.size() >= 300 )
+    if( altitude.size() >= 200 )
         altitude.erase( altitude.begin() );
 
-    float pKp = std::stof( server->get( "robot/pitch/kp", "0" ) );
-    float pKi = std::stof( server->get( "robot/pitch/ki", "0" ) );
-    float pKd = std::stof( server->get( "robot/pitch/kd", "0" ) );
-    float pSet = std::stof( server->get( "robot/pitch/set", "0" ) );
-    float pValue = std::stof( server->get( "robot/pitch/value", "0" ) );
+    float pKp = server->getFloat( "robot/pitch/kp", 0);
+    float pKi = server->getFloat( "robot/pitch/ki", 0);
+    float pKd = server->getFloat( "robot/pitch/kd", 0);
+    float pSet = server->getFloat( "robot/pitch/set", 0);
+    float pValue = server->getFloat( "robot/pitch/value", 0);
 
     pitch.push_back( std::make_tuple( pKp, pKi, pKd, pSet, pValue ) );
 
-    float rKp = std::stof( server->get( "robot/roll/kp", "0" ) );
-    float rKi = std::stof( server->get( "robot/roll/ki", "0" ) );
-    float rKd = std::stof( server->get( "robot/roll/kd", "0" ) );
-    float rSet = std::stof( server->get( "robot/roll/set", "0" ) );
-    float rValue = std::stof( server->get( "robot/roll/value", "0" ) );
+    float rKp = server->getFloat( "robot/roll/kp", 0);
+    float rKi = server->getFloat( "robot/roll/ki", 0);
+    float rKd = server->getFloat( "robot/roll/kd", 0);
+    float rSet = server->getFloat( "robot/roll/set", 0);
+    float rValue = server->getFloat( "robot/roll/value", 0);
 
     roll.push_back( std::make_tuple( rKp, rKi, rKp, rSet, rValue ) );
 
-    float yKp = std::stof( server->get( "robot/yaw/kp", "0" ) );
-    float yKi = std::stof( server->get( "robot/yaw/ki", "0" ) );
-    float yKd = std::stof( server->get( "robot/yaw/kd", "0" ) );
-    float ySet = std::stof( server->get( "robot/yaw/set", "0" ) );
-    float yValue = std::stof( server->get( "robot/yaw/value", "0" ) );
+    float yKp = server->getFloat( "robot/yaw/kp", 0);
+    float yKi = server->getFloat( "robot/yaw/ki", 0);
+    float yKd = server->getFloat( "robot/yaw/kd", 0);
+    float ySet = server->getFloat( "robot/yaw/set", 0);
+    float yValue = server->getFloat( "robot/yaw/value", 0);
 
     yaw.push_back( std::make_tuple( yKp, yKi, yKd, ySet, yValue ) );
 
-    float aKp = std::stof( server->get( "robot/altitude/kp", "0" ) );
-    float aKi = std::stof( server->get( "robot/altitude/ki", "0" ) );
-    float aKd = std::stof( server->get( "robot/altitude/kd", "0" ) );
-    float aSet = std::stof( server->get( "robot/altitude/set", "0" ) );
-    float aValue = std::stof( server->get( "robot/altitude/value", "0" ) );
+    float aKp = server->getFloat( "robot/altitude/kp", 0 ) ;
+    float aKi = server->getFloat( "robot/altitude/ki", 0 ) ;
+    float aKd = server->getFloat( "robot/altitude/kd", 0 ) ;
+    float aSet = server->getFloat( "robot/altitude/set", 0 );
+    float aValue = server->getFloat( "robot/altitude/value", 0 );
 
     altitude.push_back( std::make_tuple( aKp, aKi, aKd, aSet, aValue ) );
 
-    velocity.x = std::stof( server->get( "robot/velocity/x", "0" ) );
-    velocity.y = std::stof( server->get( "robot/velocity/y", "0" ) );
-
-    position.x = std::stof( server->get( "camera/robot_position/x", "-1" ) );
-    position.y = std::stof( server->get( "camera/robot_position/y", "-1" ) );
+    velocity.x = server->getFloat( "robot/velocity/x", 0);
+    velocity.y = server->getFloat( "robot/velocity/y", 0);
+    velocity.z = server->getFloat( "robot/velocity/y", 0);
+    position.x = server->getFloat( "camera/robot_position/x", -1);
+    position.y = server->getFloat( "camera/robot_position/y", -1);
 
 }
 
@@ -433,7 +494,7 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
     pt2.y += posPx.y;
 
     //hasta
-    pt.y = pitch_set * ajusteSet;
+    pt.y = pitch_set * ajusteSet * -1;
     pt.x = 0;
 
     pt = Util::rotate( pt, yaw_value );
@@ -476,7 +537,7 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
     pt2.y += posPx.y;
 
     //hasta
-    pt.y = velocity.x * ajusteGet / 10 * -1;                //pitch
+    pt.y = velocity.y * ajusteGet / 10 * -1;                //pitch
     pt.x = 0;
 
     pt = Util::rotate( pt, yaw_value );
@@ -497,7 +558,7 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
     pt2.y += posPx.y;
 
     //hasta
-    pt.x = velocity.y * ajusteGet / 10;                     //roll
+    pt.x = velocity.x * ajusteGet / 10;                     //roll
     pt.y = 0;
 
     pt = Util::rotate( pt, yaw_value );
@@ -549,5 +610,57 @@ void draw_robot( cv::Mat& frame, boost::shared_ptr<Environment> env, VectorPIDVa
     pt2.x = posPx.x + pt2.x;
     pt2.y = posPx.y + pt2.y;
     cv::line( frame, to_cv_point( pt2 ), to_cv_point( pt ), CV_RGB( 0, 0, 0 ), 2, 8, 0 );
+
+}
+
+void grabar(cv::Mat&  robot, cv::Mat& graphics, cv::Mat& morphology, cv::VideoWriter& vw1, cv::VideoWriter& vw2, std::string path, std::string file_name)
+{
+    //vw1 es robot + graphics
+    cv::Size sizeGrande = cv::Size(robot.size().width + graphics.size().width, (robot.size().height > graphics.size().height) ? robot.size().height : graphics.size().height);
+
+    if (!vw1.isOpened())
+    {
+	    string source = path;
+	    source.append(file_name);
+	    source.append("_1");
+	    source.append(".avi");
+	    // Open the output
+	    vw1.open(source, CV_FOURCC('X', 'V', 'I', 'D'), 12,
+			    sizeGrande, true);
+
+	    if (!vw1.isOpened())
+	    {
+		    std::printf("Could not open the output video for write: %s", source.c_str());
+	    }
+    }
+
+    cv::Mat grande(sizeGrande, CV_8UC3,
+				cv::Scalar(255, 255, 255));
+
+    robot.copyTo(grande.colRange(0, robot.size().width).rowRange(0, robot.size().height));
+    
+    graphics.copyTo(grande.colRange(robot.size().width, robot.size().width + graphics.size().width).rowRange(0,
+				    graphics.size().height));
+    vw1.write(grande);
+    
+    
+    //vw2 es morphology
+    if (!vw2.isOpened())
+    {
+	    string source = path;
+	    source.append(file_name);
+	    source.append("_2");
+	    source.append(".avi");
+	    // Open the output
+	    vw2.open(source, CV_FOURCC('X', 'V', 'I', 'D'), 12,
+			    morphology.size(), true);
+
+	    if (!vw2.isOpened())
+	    {
+		    std::printf("Could not open the output video for write: %s", source.c_str());
+	    }
+    }
+
+    vw2.write(morphology);
 
 }

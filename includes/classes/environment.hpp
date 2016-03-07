@@ -23,12 +23,15 @@ class Environment
         Point getRobotPostionNormalized(float robot_altitude);
         bool isRobotVisible();
         void updateFrame(boost::shared_ptr<VideoData> videoProxy);
+        void updateMorphology(boost::shared_ptr<VideoData> videoProxy);
         
         Point getNextDestination();
         float getConfigurationCameraHeight();
         Size getConfigurationSpaceSize();
         Point getRobotPosition();
         std::vector<Point> getDestinations();
+	
+	std::string getVideosPath();
         
         Environment(std::string config_path);
         ~Environment();
