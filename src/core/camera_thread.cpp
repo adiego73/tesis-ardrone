@@ -7,7 +7,7 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     std::cout << "camera thread" << std::endl;
 
     bool quit = false;
-    bool autocontrol = false;
+    bool autocontrol = true;
     bool start_count = true;
     auto start_time = std::chrono::high_resolution_clock::now();
     bool autocontrol_go_next_destination = false;
@@ -22,7 +22,7 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     messageServer->announce( "camera/robot_found" );
     messageServer->announce( "camera/elapsed_time" );
 
-    std::vector<Point> destinations = env->getDestinations();
+    std::vector<SafeSpot> destinations = env->getDestinations();
 
     std::string robot_visible;
 
@@ -84,11 +84,11 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
 
         if( autocontrol )
         {
-            Point next_dest = env->getNextDestination();
-            float distance = Util::distance( robot_position, next_dest );
+            SafeSpot next_dest = env->getNextDestination();
+            float distance = Util::distance( robot_position, next_dest.pos );
 
             // if distance between robot and destination is <= 50
-            if( robot_position.x != -1 && distance <=  50 )
+            if( robot_position.x != -1 && distance <=  30 )//30cm de distancia
             {
                 if( start_count )
                 {
@@ -113,14 +113,14 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
 
         if( gui_go_next_destination || autocontrol_go_next_destination )
         {
-            Point next_destination = env->nextDestination();
+            env->nextDestination();
 	    // TODO esto es un hack. GUI deberia publicar sus propios mensajes.
             messageServer->publish( "gui/go_next_destination", "false" );
         }
-	messageServer->publish( "camera/destination/x", std::to_string( env->getNextDestination().x ) );
-	messageServer->publish( "camera/destination/y", std::to_string( env->getNextDestination().y ) );
-	messageServer->publish( "camera/destination/z", std::to_string( env->getNextDestination().z ) );
-	messageServer->publish( "camera/destination/id", std::to_string( env->getNextDestination().z ) );
+	messageServer->publish( "camera/destination/x", std::to_string( env->getNextDestination().pos.x ) );
+	messageServer->publish( "camera/destination/y", std::to_string( env->getNextDestination().pos.y ) );
+	messageServer->publish( "camera/destination/z", std::to_string( env->getNextDestination().pos.z ) );
+	messageServer->publish( "camera/destination/id", std::to_string( env->getNextDestination().id ) );
 
         std::string finish_msg = messageServer->get( "gui/finish", "false" );
         std::istringstream( finish_msg ) >> std::boolalpha >> quit;

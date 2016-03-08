@@ -13,6 +13,7 @@ Point Util::ipoint_to_rpoint( Point ipoint, cv::Size img_size, Size space_size )
 {
     Point rpoint;
     
+    rpoint.z = ipoint.z;
     rpoint.x = ipoint.x * space_size.width / img_size.width ;
     rpoint.y = ipoint.y * space_size.height / img_size.height;
     
@@ -24,6 +25,7 @@ Point Util::rpoint_to_ipoint( Point rpoint, cv::Size img_size, Size space_size )
 {
     Point ipoint;
     
+    ipoint.z = rpoint.z;
     ipoint.x = rpoint.x * img_size.width / space_size.width;
     ipoint.y = rpoint.y * img_size.height / space_size.height;
 

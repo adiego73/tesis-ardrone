@@ -1,67 +1,44 @@
 {
     "safe_spot": [
+        
         {
-            "Hue": {
-                "min": 30,
-                "max": 84
-            },
-            "Saturation": {
-                "min": 68,
-                "max": 255
-            },
-            "Value": {
-                "min": 166,
-                "max": 255
-            }
-        },
-        {
-            "Hue": {
-                "min": 99,
-                "max": 125
-            },
-            "Saturation": {
-                "min": 152,
-                "max": 185
-            },
-            "Value": {
-                "min": 145,
-                "max": 255
-            }
-        },
-        {
+	    "Altitude": 700,
             "Hue": {
                 "min": 5,
                 "max": 19
             },
             "Saturation": {
-                "min": 70,
+                "min": 67,
                 "max": 255
             },
             "Value": {
-                "min": 168,
+                "min": 207,
                 "max": 255
             }
         },
-        {
+         {
+	    "Altitude": 1000,
             "Hue": {
-                "min": 94,
-                "max": 100
+                "min": 5,
+                "max": 19
             },
             "Saturation": {
-                "min": 101,
-                "max": 155
+                "min": 67,
+                "max": 255
             },
             "Value": {
-                "min": 83,
-                "max": 172
+                "min": 207,
+                "max": 255
             }
         }
+        
     ],
     "unsafe_spot": [],
-    "robot_id": {
+    "robot_id": [
+    {
         "Hue": {
             "min": 155,
-            "max": 179
+            "max": 180
         },
         "Saturation": {
             "min": 89,
@@ -72,8 +49,24 @@
             "max": 255
         }
     },
+    {
+        "Hue": {
+            "min": 0,
+            "max": 6
+        },
+        "Saturation": {
+            "min": 142,
+            "max": 255
+        },
+        "Value": {
+            "min": 148,
+            "max": 255
+        }
+    }
+    ],
     "camera_height": 3,
     "camera_number": 0,
+    "path_videos": "/home/emiliano/tesis/framework/videos/",
     "space" : {
         "height": 400.0,
         "width": 510.0

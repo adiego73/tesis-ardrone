@@ -15,45 +15,49 @@ void Environment::trackDestinations()
 {
     for( int i = 0; i < this->env_config.safe_spot.size(); i++ )
     {
-        Color destination = this->env_config.safe_spot[i];
-        //Point p = this->video_camera->trackColor( destination );
-        Point p;//color hardcodeado
+	SafeSpot sp;
+	
+        Spot destination = this->env_config.safe_spot[i];
+        sp.pos = this->video_camera->trackColor( destination.color );
+        sp.pos.z = destination.altitude;
+	
+	//color hardcodeado
 	if(i == 0)
 	{
-	  p.x = 220;
-	  p.y = 140;
+	  sp.pos.x = 220;
+	  sp.pos.y = 140;
 	}
 	else if(i == 1)
 	{
-	  p.x = 420;
-	  p.y = 340;
+	  sp.pos.x = 420;
+	  sp.pos.y = 340;
 	}
-        if( p.x != -1 || p.y !=  -1 )
+        if( sp.pos.x != -1 || sp.pos.y !=  -1 )
         {
-	    p = Util::ipoint_to_rpoint( p, this->video_camera->getFrameSize(), this->env_config.space );
-	    p.z = i;
+	    sp.pos = Util::ipoint_to_rpoint( sp.pos, this->video_camera->getFrameSize(), this->env_config.space );
+	    sp.id = i;
 	    
             int e = 0;
 
             // find safe spot position
-            while( e < this->safe_spots.size() && this->safe_spots[e].z !=  i )
+            while( e < this->safe_spots.size() && this->safe_spots[e].id !=  i )
             {
                 e++;
             }
             // update safe spot position
             if( e < this->safe_spots.size() )
             {
-                this->safe_spots[e] = p;
+                this->safe_spots[e] = sp;
             }
             else
             {
-                this->safe_spots.push_back( p );
+                this->safe_spots.push_back( sp );
             }
         }
     }
 }
 
-std::vector< Point > Environment::getDestinations()
+std::vector< SafeSpot > Environment::getDestinations()
 {
     return this->safe_spots;
 }
@@ -112,13 +116,15 @@ bool Environment::isRobotVisible()
     return ( this->robot_position.x != -1 );
 }
 
-Point Environment::nextDestination()
+SafeSpot Environment::nextDestination()
 {
     if( this->safe_spots.empty() )
     {
-        Point ret;
-        ret.x = -1;
-        ret.y = -1;
+        SafeSpot ret;
+	ret.pos.x = -1;
+	ret.pos.y = -1;
+	ret.pos.z = -1;
+	ret.id = 0;
         return ret;
     }
     this->next_destination++;
@@ -128,7 +134,7 @@ Point Environment::nextDestination()
         this->next_destination = 0;
     }
 
-    Point next_destination = this->safe_spots[this->next_destination];
+    SafeSpot next_destination = this->safe_spots[this->next_destination];
 
     
 
@@ -162,15 +168,17 @@ std::string Environment::getVideosPath()
     return this->env_config.path_videos;
 }
 
-Point Environment::getNextDestination()
+SafeSpot Environment::getNextDestination()
 {
   if (this->safe_spots.size() > this->next_destination)
       return this->safe_spots[this->next_destination];
   else  {
-        Point ret;
-        ret.x = -1;
-        ret.y = -1;
-        return ret;
+      SafeSpot ret;
+      ret.pos.x = -1;
+      ret.pos.y = -1;
+      ret.pos.z = -1;
+      ret.id = 0;
+      return ret;
    }
 }
 

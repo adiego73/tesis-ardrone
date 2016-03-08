@@ -26,9 +26,15 @@ struct Size
     float width;
 };
 
+struct Spot
+{
+    Color color;
+    int altitude;
+};
+
 struct EnvironmentConfig
 {
-    std::vector< Color > safe_spot;
+    std::vector< Spot > safe_spot;
     std::vector< Color > unsafe_spot;
     std::vector< Color > robot_id;
     //Color robot_id;

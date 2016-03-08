@@ -12,24 +12,30 @@
 
 namespace tesis
 {
+typedef struct
+{
+  
+    Point pos;
+    int id;
+} SafeSpot;
 
 class Environment
 {
     public:
         Point trackRobotPosition();
         void trackDestinations();
-        Point nextDestination();
+        SafeSpot nextDestination();
         
         Point getRobotPostionNormalized(float robot_altitude);
         bool isRobotVisible();
         void updateFrame(boost::shared_ptr<VideoData> videoProxy);
         void updateMorphology(boost::shared_ptr<VideoData> videoProxy);
         
-        Point getNextDestination();
+        SafeSpot getNextDestination();
         float getConfigurationCameraHeight();
         Size getConfigurationSpaceSize();
         Point getRobotPosition();
-        std::vector<Point> getDestinations();
+        std::vector<SafeSpot> getDestinations();
 	
 	std::string getVideosPath();
         
@@ -39,8 +45,8 @@ class Environment
     private:
         EnvironmentConfig env_config;
         
-        std::vector<Point> safe_spots;
-        std::vector<Point> unsafe_spots;
+        std::vector<SafeSpot> safe_spots;
+        std::vector<SafeSpot> unsafe_spots;
         std::vector<Point> robot_positions;
         
         boost::shared_ptr<Video> video_camera;

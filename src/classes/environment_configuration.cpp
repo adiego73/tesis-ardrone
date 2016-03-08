@@ -67,11 +67,13 @@ void EnvironmentConfiguration::parse()
         {
             property_tree::ptree child = val.second;
 
-            Color s_spot;
+            Spot s_spot;
             Range s_hue;
             Range s_saturation;
             Range s_value;
-
+	    
+	    s_spot.altitude = child.get( "Altitude", 0);
+	    
             s_hue.min = child.get( "Hue.min", 0 );
             s_hue.max = child.get( "Hue.max", 0 );
 
@@ -81,10 +83,10 @@ void EnvironmentConfiguration::parse()
             s_value.min = child.get( "Value.min", 0 );
             s_value.max = child.get( "Value.max", 0 );
 
-            s_spot.Hue = s_hue;
-            s_spot.Saturation = s_saturation;
-            s_spot.Value = s_value;
-
+            s_spot.color.Hue = s_hue;
+            s_spot.color.Saturation = s_saturation;
+            s_spot.color.Value = s_value;
+  
             config.safe_spot.push_back( s_spot );
         }
 
