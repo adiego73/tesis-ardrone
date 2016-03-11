@@ -27,7 +27,7 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     std::string robot_visible;
 
     long time = 0;
-    int trackDestinations = 10;
+    int trackDestinations = 0;
     auto start = std::chrono::high_resolution_clock::now();
 
     while( !quit )

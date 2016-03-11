@@ -2,32 +2,32 @@
     "safe_spot": [
         
         {
-	    "Altitude": 700,
+	    "Altitude": 900,
             "Hue": {
-                "min": 5,
-                "max": 19
+                "min": 9,
+                "max": 14
             },
             "Saturation": {
-                "min": 67,
+                "min": 99,
                 "max": 255
             },
             "Value": {
-                "min": 207,
+                "min": 144,
                 "max": 255
             }
         },
          {
-	    "Altitude": 1000,
+	    "Altitude": 700,
             "Hue": {
-                "min": 5,
-                "max": 19
+                "min": 28,
+                "max": 36
             },
             "Saturation": {
-                "min": 67,
+                "min": 64,
                 "max": 255
             },
             "Value": {
-                "min": 207,
+                "min": 144,
                 "max": 255
             }
         }
@@ -64,11 +64,11 @@
         }
     }
     ],
-    "camera_height": 3,
-    "camera_number": 0,
+    "camera_height": 2.5,
+    "camera_number": 1,
     "path_videos": "/home/emiliano/tesis/framework/videos/",
     "space" : {
-        "height": 400.0,
-        "width": 510.0
+        "height": 300.0,
+        "width": 400.0
     }
 }

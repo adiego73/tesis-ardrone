@@ -22,7 +22,7 @@ void Environment::trackDestinations()
         sp.pos.z = destination.altitude;
 	
 	//color hardcodeado
-	if(i == 0)
+	/*if(i == 0)
 	{
 	  sp.pos.x = 220;
 	  sp.pos.y = 140;
@@ -31,7 +31,7 @@ void Environment::trackDestinations()
 	{
 	  sp.pos.x = 420;
 	  sp.pos.y = 340;
-	}
+	}*/
         if( sp.pos.x != -1 || sp.pos.y !=  -1 )
         {
 	    sp.pos = Util::ipoint_to_rpoint( sp.pos, this->video_camera->getFrameSize(), this->env_config.space );
@@ -47,7 +47,8 @@ void Environment::trackDestinations()
             // update safe spot position
             if( e < this->safe_spots.size() )
             {
-                this->safe_spots[e] = sp;
+	      if(Util::distance(this->safe_spots[e].pos, sp.pos) < 30)
+		this->safe_spots[e] = sp;
             }
             else
             {

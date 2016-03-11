@@ -128,8 +128,9 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
 	cv::imshow( window_name, frame );
 	cv::imshow( morphology_name, morphology );
 
-        if( show_graphics )
+        if( show_graphics && !frame.empty())
         {
+	  
             update_vector_pid_values( messageServer, pitch_values, roll_values , yaw_values, altitude_values, robot_position, robot_velocity );
 
             cv::Mat graphics_frame( cv::Size( 640, 630 ), CV_8UC3, cv::Scalar( 255, 255, 255 ) );
@@ -214,8 +215,10 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
                 show_graphics = show_graphics ? false : true;
 
                 if( !show_graphics )
+		{
+                    cv::destroyWindow( robot_debug_window_name);
                     cv::destroyWindow( graphics_window_name );
-
+		}
                 break;
             }
             

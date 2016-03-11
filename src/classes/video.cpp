@@ -41,8 +41,8 @@ void Video::capture()
 {
     cv::Mat orig;
     this->cap.read( orig );
-    
-    cv::undistort(orig, this->frame, intrinsic_matrix, distCoeffs);
+    if(!orig.empty())
+      cv::undistort(orig, this->frame, intrinsic_matrix, distCoeffs);
 
 }
 
@@ -81,6 +81,13 @@ Point Video::trackColor( Color color )
 {
     Point pos;
     cv::Mat frame = this->getFrame();
+    if(frame.empty())
+    {
+      Point p;
+      p.x = -1;
+      p.y = -1;
+      return p;
+    }
     cv::Size imageSize = this->getFrameSize();
 
     cv::Mat frame_th = cv::Mat( imageSize, CV_8UC1 );
@@ -136,6 +143,13 @@ Point Video::trackColor( Color color, Color color2)
 {
     cv::Point pos;
     cv::Mat frame = this->getFrame();
+    if(frame.empty())
+    {
+      Point p;
+      p.x = -1;
+      p.y = -1;
+      return p;
+    }
     cv::Size imageSize = this->getFrameSize();
 
     cv::Mat frame_th = cv::Mat( imageSize, CV_8UC1 );
