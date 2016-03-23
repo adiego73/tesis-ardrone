@@ -24,6 +24,6 @@
 void gui_thread( boost::shared_ptr<tesis::MessageServer> messageServer, boost::shared_ptr<tesis::Environment> env, boost::shared_ptr<tesis::VideoData> videoData);
 void camera_thread( boost::shared_ptr<tesis::MessageServer> messageServer, boost::shared_ptr<tesis::Environment> env, boost::shared_ptr<tesis::VideoData> videoData);
 void robot_thread( boost::shared_ptr<tesis::MessageServer> messageServer );
-
+void rutina_thread( boost::shared_ptr<tesis::MessageServer> messageServer );
 
 #endif

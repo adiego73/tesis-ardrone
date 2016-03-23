@@ -30,6 +30,7 @@ int main( int argc, char** argv )
     threads.create_thread( boost::bind( gui_thread, msg_server, env, videoProxy ) );
     threads.create_thread( boost::bind( camera_thread, msg_server, env, videoProxy ) );
     threads.create_thread( boost::bind( robot_thread, msg_server ) );
+    threads.create_thread( boost::bind( rutina_thread, msg_server ) );
 
     threads.join_all();
 

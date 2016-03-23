@@ -2,7 +2,10 @@
     "safe_spot": [
         
         {
+	    "Id":1,
+	    "Comentario":"Parche naranja", 
 	    "Altitude": 900,
+            "Tiempo": 2,
             "Hue": {
                 "min": 9,
                 "max": 14
@@ -17,7 +20,10 @@
             }
         },
          {
+	    "Id":2,
+	    "Comentario":"parche amarillo",
 	    "Altitude": 700,
+	    "Tiempo": 1,
             "Hue": {
                 "min": 28,
                 "max": 36

@@ -17,6 +17,9 @@ typedef struct
   
     Point pos;
     int id;
+    float time;
+    std::string comment;
+    
 } SafeSpot;
 
 class Environment
@@ -32,6 +35,7 @@ class Environment
         void updateMorphology(boost::shared_ptr<VideoData> videoProxy);
         
         SafeSpot getNextDestination();
+	EnvironmentConfig getConfiguration();
         float getConfigurationCameraHeight();
         Size getConfigurationSpaceSize();
         Point getRobotPosition();

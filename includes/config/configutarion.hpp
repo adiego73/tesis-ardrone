@@ -29,7 +29,11 @@ struct Size
 struct Spot
 {
     Color color;
+    int id;
     int altitude;
+    float time;
+    std::string comment;
+    
 };
 
 struct EnvironmentConfig

@@ -15,10 +15,17 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     messageServer->announce( "camera/robot_position/x" );
     messageServer->announce( "camera/robot_position/y" );
     messageServer->announce( "camera/robot_position/z" );
-    messageServer->announce( "camera/destination/x" );
-    messageServer->announce( "camera/destination/y" );
-    messageServer->announce( "camera/destination/z" );
-    messageServer->announce( "camera/destination/id" );
+    
+    messageServer->announce( "camera/destination/count");
+    for(int i = 0; i < env->getConfiguration().safe_spot.size();i++)
+    {
+      messageServer->announce( "camera/destination/" + std::to_string(i) + "/x" );
+      messageServer->announce( "camera/destination/" + std::to_string(i) + "/y" );
+      messageServer->announce( "camera/destination/" + std::to_string(i) + "/z" );
+      messageServer->announce( "camera/destination/" + std::to_string(i) + "/id" );
+      messageServer->announce( "camera/destination/" + std::to_string(i) + "/time" );
+      messageServer->announce( "camera/destination/" + std::to_string(i) + "/comment" );
+    }
     messageServer->announce( "camera/robot_found" );
     messageServer->announce( "camera/elapsed_time" );
 
@@ -41,7 +48,18 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
             env->trackDestinations();
             destinations = env->getDestinations();
             trackDestinations = 0;
-        }
+	    
+	    for(int i = 0; i < destinations.size();i++)
+	    {
+	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/x", destinations.at(i).pos.x );
+	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/y", destinations.at(i).pos.y );
+	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/z", destinations.at(i).pos.z );
+	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/id", destinations.at(i).id );
+	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/time", destinations.at(i).time );
+	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/comment", destinations.at(i).comment );
+	    }
+	    messageServer->publish( "camera/destination/count", destinations.size());
+	}
 
         trackDestinations++;
 
@@ -52,8 +70,7 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
         start = std::chrono::high_resolution_clock::now();
 
         // El robot debe mandar su altura cada tanto.
-        std::string altitude_msg = messageServer->get( "robot/altitude", "0" );
-        float robot_altitude = std::stof( altitude_msg );
+        float robot_altitude = messageServer->getFloat( "robot/altitude", "0" );
 
         Point robot_position = env->getRobotPostionNormalized( robot_altitude );
 
@@ -77,11 +94,12 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
         robot_visible = env->isRobotVisible() ? "true" : "false";
 
         messageServer->publish( "camera/robot_found", robot_visible );
-
+/*
         bool gui_go_next_destination;
         std::string go_next_destination_str = messageServer->get( "gui/go_next_destination", "true" );
         std::istringstream( go_next_destination_str ) >> std::boolalpha >> gui_go_next_destination;
 
+	
         if( autocontrol )
         {
             SafeSpot next_dest = env->getNextDestination();
@@ -121,9 +139,8 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
 	messageServer->publish( "camera/destination/y", std::to_string( env->getNextDestination().pos.y ) );
 	messageServer->publish( "camera/destination/z", std::to_string( env->getNextDestination().pos.z ) );
 	messageServer->publish( "camera/destination/id", std::to_string( env->getNextDestination().id ) );
-
-        std::string finish_msg = messageServer->get( "gui/finish", "false" );
-        std::istringstream( finish_msg ) >> std::boolalpha >> quit;
+*/
+        quit = messageServer->getBool( "gui/finish", "false" );
 
     }
 

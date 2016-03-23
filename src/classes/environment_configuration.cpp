@@ -73,6 +73,9 @@ void EnvironmentConfiguration::parse()
             Range s_value;
 	    
 	    s_spot.altitude = child.get( "Altitude", 0);
+	    s_spot.comment = child.get( "Comment", "");
+	    s_spot.time = child.get( "Time", 0);
+	    s_spot.id = child.get( "Id", 0);
 	    
             s_hue.min = child.get( "Hue.min", 0 );
             s_hue.max = child.get( "Hue.max", 0 );

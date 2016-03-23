@@ -20,6 +20,9 @@ void Environment::trackDestinations()
         Spot destination = this->env_config.safe_spot[i];
         sp.pos = this->video_camera->trackColor( destination.color );
         sp.pos.z = destination.altitude;
+	sp.id = destination.id;
+	sp.comment = destination.comment;
+	sp.time = destination.time;
 	
 	//color hardcodeado
 	/*if(i == 0)
@@ -35,7 +38,6 @@ void Environment::trackDestinations()
         if( sp.pos.x != -1 || sp.pos.y !=  -1 )
         {
 	    sp.pos = Util::ipoint_to_rpoint( sp.pos, this->video_camera->getFrameSize(), this->env_config.space );
-	    sp.id = i;
 	    
             int e = 0;
 
@@ -126,6 +128,8 @@ SafeSpot Environment::nextDestination()
 	ret.pos.y = -1;
 	ret.pos.z = -1;
 	ret.id = 0;
+	ret.comment = "";
+	ret.time = 0;
         return ret;
     }
     this->next_destination++;
@@ -165,7 +169,7 @@ Size Environment::getConfigurationSpaceSize()
 }
 
 std::string Environment::getVideosPath()
-{
+{ret.
     return this->env_config.path_videos;
 }
 
@@ -179,6 +183,8 @@ SafeSpot Environment::getNextDestination()
       ret.pos.y = -1;
       ret.pos.z = -1;
       ret.id = 0;
+      ret.comment = "";
+      ret.time = 0;
       return ret;
    }
 }
@@ -186,6 +192,11 @@ SafeSpot Environment::getNextDestination()
 Point Environment::getRobotPosition()
 {
     return this->robot_position;
+}
+
+EnvironmentConfig Environment::getConfiguration()
+{
+    return this->env_config;
 }
 
 Environment::~Environment()
