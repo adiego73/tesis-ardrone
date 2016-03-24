@@ -23,7 +23,7 @@ add_executable(tesis-ardrone main.cpp
                              src/core/camera_thread.cpp
                              src/core/robot_thread.cpp
                              src/core/gui_thread.cpp
-                            
+			     src/core/rutina_thread.cpp
                              src/util/util.cpp
                              src/classes/video.cpp 
                              src/classes/environment.cpp 
