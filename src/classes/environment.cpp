@@ -169,7 +169,7 @@ Size Environment::getConfigurationSpaceSize()
 }
 
 std::string Environment::getVideosPath()
-{ret.
+{
     return this->env_config.path_videos;
 }
 

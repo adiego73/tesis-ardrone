@@ -51,14 +51,14 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
 	    
 	    for(int i = 0; i < destinations.size();i++)
 	    {
-	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/x", destinations.at(i).pos.x );
-	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/y", destinations.at(i).pos.y );
-	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/z", destinations.at(i).pos.z );
-	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/id", destinations.at(i).id );
-	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/time", destinations.at(i).time );
+	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/x", std::to_string(destinations.at(i).pos.x) );
+	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/y", std::to_string(destinations.at(i).pos.y) );
+	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/z", std::to_string(destinations.at(i).pos.z) );
+	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/id", std::to_string(destinations.at(i).id) );
+	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/time", std::to_string(destinations.at(i).time) );
 	      messageServer->publish( "camera/destination/" + std::to_string(i) + "/comment", destinations.at(i).comment );
 	    }
-	    messageServer->publish( "camera/destination/count", destinations.size());
+	    messageServer->publish( "camera/destination/count", std::to_string(destinations.size()));
 	}
 
         trackDestinations++;
@@ -70,7 +70,7 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
         start = std::chrono::high_resolution_clock::now();
 
         // El robot debe mandar su altura cada tanto.
-        float robot_altitude = messageServer->getFloat( "robot/altitude", "0" );
+        float robot_altitude = messageServer->getFloat( "robot/altitude", 0.0 );
 
         Point robot_position = env->getRobotPostionNormalized( robot_altitude );
 
