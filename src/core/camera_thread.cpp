@@ -12,6 +12,12 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     auto start_time = std::chrono::high_resolution_clock::now();
     bool autocontrol_go_next_destination = false;
 
+    
+    messageServer->announce( "camera/space/height" );
+    messageServer->announce( "camera/space/width" );
+    messageServer->publish( "camera/space/height", std::to_string(env->getConfigurationSpaceSize().height));
+    messageServer->publish( "camera/space/width", std::to_string(env->getConfigurationSpaceSize().width));
+    
     messageServer->announce( "camera/robot_position/x" );
     messageServer->announce( "camera/robot_position/y" );
     messageServer->announce( "camera/robot_position/z" );
@@ -36,7 +42,11 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
     long time = 0;
     int trackDestinations = 0;
     auto start = std::chrono::high_resolution_clock::now();
-
+    Point last_robot_position;
+    last_robot_position.x = -1;
+    last_robot_position.y = -1;
+    last_robot_position.z = 0;
+    
     while( !quit )
     {
         // I think this is the simplest way to pass the frame to the gui thread.
@@ -72,10 +82,17 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
         // El robot debe mandar su altura cada tanto.
         float robot_altitude = messageServer->getFloat( "robot/altitude", 0.0 );
 
-        Point robot_position = env->getRobotPostionNormalized( robot_altitude );
+        Point robot_position= env->getRobotPostionNormalized( robot_altitude );
 
-        messageServer->publish( "camera/robot_position/x", std::to_string( robot_position.x ) );
-        messageServer->publish( "camera/robot_position/y", std::to_string( robot_position.y ) );
+	//si no lo veo pongo la posicion vieja
+	Point r;
+	if(robot_position.x == -1)
+	  r = last_robot_position;
+	else
+	  r = robot_position;
+	
+        messageServer->publish( "camera/robot_position/x", std::to_string( r.x ) );
+        messageServer->publish( "camera/robot_position/y", std::to_string( r.y ) );
         messageServer->publish( "camera/robot_position/z", std::to_string( robot_altitude ) );
 
         // if the robot was previously found, time should be elapsed_time
@@ -139,7 +156,9 @@ void camera_thread( boost::shared_ptr<MessageServer> messageServer, boost::share
 	messageServer->publish( "camera/destination/y", std::to_string( env->getNextDestination().pos.y ) );
 	messageServer->publish( "camera/destination/z", std::to_string( env->getNextDestination().pos.z ) );
 	messageServer->publish( "camera/destination/id", std::to_string( env->getNextDestination().id ) );
-*/
+*/	
+	if(robot_position.x != -1)
+	  last_robot_position = robot_position;
         quit = messageServer->getBool( "gui/finish", "false" );
 
     }
