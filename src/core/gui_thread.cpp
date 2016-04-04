@@ -373,17 +373,17 @@ void write_robot_info( cv::Mat& frame, VectorPIDValues roll, VectorPIDValues pit
 			std::get<3>( yaw.back() ), std::get<3>( altitude.back() ));
 	
 	string line2 = cv::format(
-			"GET--> Pitch: %.3f , Roll: %.3f, Yaw: %.3f, Altitude: %.0f mm",
+			"GET--> Pitch: %.3f , Roll: %.3f, Yaw: %.3f, Altitude: %.0f cm",
 			std::get<4>( pitch.back() ), std::get<4>( roll.back() ),
-			std::get<4>( yaw.back() ), std::get<4>( altitude.back()) * 1000);
+			std::get<4>( yaw.back() ), std::get<4>( altitude.back()) * 100);
 	string line3 = cv::format(
 			"Vel-X: %.3f, Vel-Y: %.3f, Vel-Z: %.3f cm/s Bateria: %d%%, ",
 			velocity.x, velocity.y, velocity.z, messageServer->getInt("robot/battery", 0));
 	/*string line4 = cv::format("Battery: %d %%, State: %s",
 			threadAttr->data.copterValues.battery, threadAttr->data.copterValues.ctrl_state_sz.c_str());
 */	
-	string line4 = cv::format("Destino: X: %.1f, Y: %.1f, Z: %.0f Dist: %d, Dx: %d, Dy: %d, Ang: %.2f, SPAng: %.2f",
-			env->getNextDestination().pos.x, env->getNextDestination().pos.y, env->getNextDestination().pos.z,
+	string line4 = cv::format("Destino: X: %.1f, Y: %.1f, Z: %.0fcm Dist: %d, Dx: %d, Dy: %d, Ang: %.2f, SPAng: %.2f",
+			env->getNextDestination().pos.x, env->getNextDestination().pos.y, env->getNextDestination().pos.z / 10,
 			messageServer->getLong( "robot/destino/dist/total", 0),
 			messageServer->getLong( "robot/destino/dist/x", 0),
 			messageServer->getLong( "robot/destino/dist/y", 0),
