@@ -7,15 +7,15 @@
 	    "Altitude": 900,
             "Tiempo": 2,
             "Hue": {
-                "min": 9,
-                "max": 14
+                "min": 14,
+                "max": 26
             },
             "Saturation": {
-                "min": 99,
+                "min": 56,
                 "max": 255
             },
             "Value": {
-                "min": 144,
+                "min": 164,
                 "max": 255
             }
         },
@@ -25,15 +25,15 @@
 	    "Altitude": 700,
 	    "Tiempo": 1,
             "Hue": {
-                "min": 28,
-                "max": 36
+                "min": 37,
+                "max": 51
             },
             "Saturation": {
-                "min": 64,
+                "min": 72,
                 "max": 255
             },
             "Value": {
-                "min": 144,
+                "min": 163,
                 "max": 255
             }
         }
@@ -43,15 +43,15 @@
     "robot_id": [
     {
         "Hue": {
-            "min": 155,
+            "min": 130,
             "max": 180
         },
         "Saturation": {
-            "min": 89,
+            "min": 53,
             "max": 255
         },
         "Value": {
-            "min": 95,
+            "min": 55,
             "max": 255
         }
     },
@@ -61,11 +61,11 @@
             "max": 6
         },
         "Saturation": {
-            "min": 142,
+            "min": 53,
             "max": 255
         },
         "Value": {
-            "min": 148,
+            "min": 0,
             "max": 255
         }
     }

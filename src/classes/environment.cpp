@@ -15,42 +15,43 @@ void Environment::trackDestinations()
 {
     for( int i = 0; i < this->env_config.safe_spot.size(); i++ )
     {
-	SafeSpot sp;
-	
+        SafeSpot sp;
+
         Spot destination = this->env_config.safe_spot[i];
         sp.pos = this->video_camera->trackColor( destination.color );
         sp.pos.z = destination.altitude;
-	sp.id = destination.id;
-	sp.comment = destination.comment;
-	sp.time = destination.time;
-	
-	//color hardcodeado
-	/*if(i == 0)
-	{
-	  sp.pos.x = 220;
-	  sp.pos.y = 140;
-	}
-	else if(i == 1)
-	{
-	  sp.pos.x = 420;
-	  sp.pos.y = 340;
-	}*/
+        sp.id = destination.id;
+        sp.comment = destination.comment;
+        sp.time = destination.time;
+
+        //color hardcodeado
+        /*if(i == 0)
+        {
+          sp.pos.x = 220;
+          sp.pos.y = 140;
+        }
+        else if(i == 1)
+        {
+          sp.pos.x = 420;
+          sp.pos.y = 340;
+        }*/
         if( sp.pos.x != -1 || sp.pos.y !=  -1 )
         {
-	    sp.pos = Util::ipoint_to_rpoint( sp.pos, this->video_camera->getFrameSize(), this->env_config.space );
-	    
+            sp.pos = Util::ipoint_to_rpoint( sp.pos, this->video_camera->getFrameSize(), this->env_config.space );
+
             int e = 0;
 
             // find safe spot position
-            while( e < this->safe_spots.size() && this->safe_spots[e].id !=  i )
+            while( e < this->safe_spots.size() && this->safe_spots[e].id !=  sp.id)
             {
                 e++;
             }
+
             // update safe spot position
             if( e < this->safe_spots.size() )
             {
-	      if(Util::distance(this->safe_spots[e].pos, sp.pos) < 30)
-		this->safe_spots[e] = sp;
+                if( Util::distance( this->safe_spots[e].pos, sp.pos ) < 30 )
+                    this->safe_spots[e] = sp;
             }
             else
             {
@@ -68,11 +69,12 @@ std::vector< SafeSpot > Environment::getDestinations()
 Point Environment::trackRobotPosition()
 {
     Point position;
-    if(this->env_config.robot_id.size() == 1)
-	position = this->video_camera->trackColor( this->env_config.robot_id[0] );
-    else if(this->env_config.robot_id.size() == 2)
-    	position = this->video_camera->trackColor( this->env_config.robot_id[0], this->env_config.robot_id[1] );
-    
+
+    if( this->env_config.robot_id.size() == 1 )
+        position = this->video_camera->trackColor( this->env_config.robot_id[0] );
+    else if( this->env_config.robot_id.size() == 2 )
+        position = this->video_camera->trackColor( this->env_config.robot_id[0], this->env_config.robot_id[1] );
+
     this->robot_position = position;
 
     return position;
@@ -124,16 +126,17 @@ SafeSpot Environment::nextDestination()
     if( this->safe_spots.empty() )
     {
         SafeSpot ret;
-	ret.pos.x = -1;
-	ret.pos.y = -1;
-	ret.pos.z = -1;
-	ret.id = 0;
-	ret.comment = "";
-	ret.time = 0;
+        ret.pos.x = -1;
+        ret.pos.y = -1;
+        ret.pos.z = -1;
+        ret.id = 0;
+        ret.comment = "";
+        ret.time = 0;
         return ret;
     }
+
     this->next_destination++;
-    
+
     if( this->next_destination >= this->safe_spots.size() )
     {
         this->next_destination = 0;
@@ -141,7 +144,7 @@ SafeSpot Environment::nextDestination()
 
     SafeSpot next_destination = this->safe_spots[this->next_destination];
 
-    
+
 
     return next_destination;
 }
@@ -175,18 +178,19 @@ std::string Environment::getVideosPath()
 
 SafeSpot Environment::getNextDestination()
 {
-  if (this->safe_spots.size() > this->next_destination)
-      return this->safe_spots[this->next_destination];
-  else  {
-      SafeSpot ret;
-      ret.pos.x = -1;
-      ret.pos.y = -1;
-      ret.pos.z = -1;
-      ret.id = 0;
-      ret.comment = "";
-      ret.time = 0;
-      return ret;
-   }
+    if( this->safe_spots.size() > this->next_destination )
+        return this->safe_spots[this->next_destination];
+    else
+    {
+        SafeSpot ret;
+        ret.pos.x = -1;
+        ret.pos.y = -1;
+        ret.pos.z = -1;
+        ret.id = 0;
+        ret.comment = "";
+        ret.time = 0;
+        return ret;
+    }
 }
 
 Point Environment::getRobotPosition()

@@ -108,7 +108,7 @@ void gui_thread( boost::shared_ptr<MessageServer> messageServer, boost::shared_p
     cv::namedWindow( window_name, cv::WINDOW_AUTOSIZE );
     cv::namedWindow( morphology_name, cv::WINDOW_AUTOSIZE );
     frame = videoProxy->readFrame();
-    frame = videoProxy->readMorphology();
+    morphology = videoProxy->readMorphology();
     
 
     messageServer->announce( "gui/action/takeoff" );
@@ -405,7 +405,7 @@ void write_robot_info( cv::Mat& frame, VectorPIDValues roll, VectorPIDValues pit
 	cv::putText( frame, line3, cv::Point(10, 50), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_BLUE);
 	cv::putText( frame, line4, cv::Point(10, 70), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_BLACK );
 	cv::putText( frame, line5, cv::Point(10, 90), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_BLACK );
-	cv::putText( frame, line6, cv::Point(10, 110), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_RED);
+//	cv::putText( frame, line6, cv::Point(10, 110), CV_FONT_HERSHEY_SIMPLEX, 0.4, CF_RED);
 	//cv::putText( frame, line6, cv::Point(10, 110), CV_FONT_HERSHEY_SIMPLEX, 0.4, BLACK );
 
 
