@@ -16,16 +16,16 @@ namespace tesis
 
 class EnvironmentConfiguration
 {
-    public:
-        EnvironmentConfiguration(std::string path);
-        EnvironmentConfig get();
+public:
+	EnvironmentConfiguration ( std::string path );
+	EnvironmentConfig get();
 
-        ~EnvironmentConfiguration();
-    private:
-        EnvironmentConfig configuration;
-        std::string path;
+	~EnvironmentConfiguration();
+private:
+	EnvironmentConfig configuration;
+	std::string path;
 
-        void parse();
+	void parse();
 };
 
 };

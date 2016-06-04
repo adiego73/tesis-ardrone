@@ -4,37 +4,52 @@
         {
 	    "Id":1,
 	    "Comentario":"Parche naranja", 
-	    "Altitude": 900,
-            "Tiempo": 2,
-            "Hue": {
-                "min": 14,
-                "max": 26
-            },
-            "Saturation": {
-                "min": 56,
-                "max": 255
-            },
-            "Value": {
-                "min": 164,
-                "max": 255
-            }
+		"Tiempo": 8,
+		"Hue": {
+			"min": 14,
+			"max": 26
+		},
+		"Saturation": {
+			"min": 56,
+			"max": 255
+		},
+		"Value": {
+			"min": 164,
+			"max": 255
+		}
         },
          {
 	    "Id":2,
 	    "Comentario":"parche amarillo",
-	    "Altitude": 700,
-	    "Tiempo": 1,
+	    "Tiempo": 2,
             "Hue": {
-                "min": 37,
-                "max": 51
+                "min": 0,
+                "max": 42
             },
             "Saturation": {
-                "min": 72,
+                "min": 89,
                 "max": 255
             },
             "Value": {
-                "min": 163,
+                "min": 196,
                 "max": 255
+            }
+        },
+         {
+	    "Id":3,
+	    "Comentario":"parche verde",
+	    "Tiempo": 2,
+            "Hue": {
+                "min": 88,
+                "max": 97
+            },
+            "Saturation": {
+                "min": 97,
+                "max": 140
+            },
+            "Value": {
+                "min": 79,
+                "max": 116
             }
         }
         
@@ -70,8 +85,8 @@
         }
     }
     ],
-    "camera_height": 2.5,
-    "camera_number": 1,
+    "camera_height": 3,
+    "camera_number": 0,
     "path_videos": "/home/emiliano/tesis/framework/videos/",
     "space" : {
         "height": 300.0,

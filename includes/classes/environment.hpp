@@ -12,52 +12,52 @@
 
 namespace tesis
 {
-typedef struct
-{
-  
-    Point pos;
-    int id;
-    float time;
-    std::string comment;
-    
+typedef struct {
+
+	Point pos;
+	int id;
+	float time;
+	std::string comment;
+
 } SafeSpot;
 
 class Environment
 {
-    public:
-        Point trackRobotPosition();
-        void trackDestinations();
-        SafeSpot nextDestination();
-        
-        Point getRobotPostionNormalized(float robot_altitude);
-        bool isRobotVisible();
-        void updateFrame(boost::shared_ptr<VideoData> videoProxy);
-        void updateMorphology(boost::shared_ptr<VideoData> videoProxy);
-        
-        SafeSpot getNextDestination();
-	EnvironmentConfig getConfiguration();
-        float getConfigurationCameraHeight();
-        Size getConfigurationSpaceSize();
-        Point getRobotPosition();
-        std::vector<SafeSpot> getDestinations();
-	
-	std::string getVideosPath();
-        
-        Environment(std::string config_path);
-        ~Environment();
+public:
+	Point trackRobotPosition();
+	void trackSpots();
+	//SafeSpot nextDestination();
 
-    private:
-        EnvironmentConfig env_config;
-        
-        std::vector<SafeSpot> safe_spots;
-        std::vector<SafeSpot> unsafe_spots;
-        std::vector<Point> robot_positions;
-        
-        boost::shared_ptr<Video> video_camera;
-        
-        int next_destination;
-        float camera_height;
-        Point robot_position;
+	Point getRobotPostionNormalized ( float robot_altitude );
+	bool isRobotVisible();
+	void updateFrame ( boost::shared_ptr<VideoData> videoProxy );
+	void updateMorphology ( boost::shared_ptr<VideoData> videoProxy );
+
+	//SafeSpot getNextDestination();
+	SafeSpot* getSpot ( int id );
+	EnvironmentConfig getConfiguration();
+	float getConfigurationCameraHeight();
+	Size getConfigurationSpaceSize();
+	Point getRobotPosition();
+	std::vector<SafeSpot> getSpots();
+
+	std::string getVideosPath();
+
+	Environment ( std::string config_path );
+	~Environment();
+
+private:
+	EnvironmentConfig env_config;
+
+	std::vector<SafeSpot> safe_spots;
+	std::vector<SafeSpot> unsafe_spots;
+	std::vector<Point> robot_positions;
+
+	boost::shared_ptr<Video> video_camera;
+
+	int next_destination;
+	float camera_height;
+	Point robot_position;
 };
 
 

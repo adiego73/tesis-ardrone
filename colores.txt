@@ -1,0 +1,64 @@
+rojo
+"robot_id": {
+        "Hue": {
+            "min": 161,
+            "max": 179
+        },
+        "Saturation": {
+            "min": 57,
+            "max": 255
+        },
+        "Value": {
+            "min": 0,
+            "max": 255
+        }
+    },
+
+amarillo
+
+"Hue": {
+                "min": 30,
+                "max": 84
+            },
+            "Saturation": {
+                "min": 68,
+                "max": 255
+            },
+            "Value": {
+                "min": 166,
+                "max": 255
+            }
+
+azul
+
+{
+            "Hue": {
+                "min": 99,
+                "max": 125
+            },
+            "Saturation": {
+                "min": 152,
+                "max": 185
+            },
+            "Value": {
+                "min": 145,
+                "max": 255
+            }
+        },
+
+naranja
+
+{
+            "Hue": {
+                "min": 5,
+                "max": 19
+            },
+            "Saturation": {
+                "min": 70,
+                "max": 255
+            },
+            "Value": {
+                "min": 168,
+                "max": 255
+            }
+        },

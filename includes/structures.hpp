@@ -18,12 +18,11 @@ namespace tesis
 #define MAX_ANGLE 180
 #endif
 
-typedef struct
-{
-  
-    float x;
-    float y;
-    float z;
+typedef struct {
+
+	float x;
+	float y;
+	float z;
 } Point;
 
 

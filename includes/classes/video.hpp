@@ -8,29 +8,29 @@ namespace tesis
 
 class Video
 {
-    
-    public:
-        Point trackColor(Color color);
-        Point trackColor(Color color, Color color2);
+
+public:
+	Point trackColor ( Color color );
+	Point trackColor ( Color color, Color color2 );
 	cv::Mat getFrame();
-        cv::Mat getMorphology();
+	cv::Mat getMorphology();
 	cv::Size getFrameSize();
-        float getFrameWidth();
-        float getFrameHeight();
-        void capture();
+	float getFrameWidth();
+	float getFrameHeight();
+	void capture();
 
-        Video( int camera );
-        ~Video();
+	Video ( int camera );
+	~Video();
 
-    private:
-	cv::Point getMoment(cv::Mat frame);
-        cv::VideoCapture cap;
-        cv::Mat frame;
+private:
+	cv::Point getMoment ( cv::Mat frame );
+	cv::VideoCapture cap;
+	cv::Mat frame;
 	cv::Mat morphology;
 	cv::Size img_size;
 	int radio;
 	cv::Point lastFind;
-        cv::Point lastLastFind;
+	cv::Point lastLastFind;
 	int fps;
 	double dIntrinsic_matrix[3][3];
 	double dDistCoeffs[5];
