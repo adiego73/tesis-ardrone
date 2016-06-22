@@ -3,53 +3,87 @@
         
         {
 	    "Id":1,
-	    "Comentario":"Parche naranja", 
-		"Tiempo": 8,
-		"Hue": {
-			"min": 14,
-			"max": 26
-		},
-		"Saturation": {
-			"min": 56,
-			"max": 255
-		},
-		"Value": {
-			"min": 164,
-			"max": 255
-		}
-        },
-         {
-	    "Id":2,
 	    "Comentario":"parche amarillo",
 	    "Tiempo": 2,
             "Hue": {
-                "min": 0,
-                "max": 42
+                "min": 29,
+                "max": 44
             },
             "Saturation": {
-                "min": 89,
+                "min": 146,
                 "max": 255
             },
             "Value": {
-                "min": 196,
+                "min": 154,
                 "max": 255
             }
         },
          {
-	    "Id":3,
+	    "Id":2,
 	    "Comentario":"parche verde",
 	    "Tiempo": 2,
             "Hue": {
-                "min": 88,
-                "max": 97
+                "min": 61,
+                "max": 98
             },
             "Saturation": {
-                "min": 97,
+                "min": 70,
                 "max": 140
             },
             "Value": {
                 "min": 79,
                 "max": 116
+            }
+        },
+         {
+	    "Id":3,
+	    "Comentario":"parche naranja",
+	    "Tiempo": 4,
+            "Hue": {
+                "min": 16,
+                "max": 23
+            },
+            "Saturation": {
+                "min": 182,
+                "max": 255
+            },
+            "Value": {
+                "min": 163,
+                "max": 255
+            }
+        },
+         {
+	    "Id":4,
+	    "Comentario":"parche azul",
+	    "Tiempo": 4,
+            "Hue": {
+                "min": 116,
+                "max": 138
+            },
+            "Saturation": {
+                "min": 108,
+                "max": 255
+            },
+            "Value": {
+                "min": 12,
+                "max": 200
+            }
+        },
+         {
+	    "Id":5,
+	    "Comentario":"parche celeste",
+	    "Tiempo": 7,
+            "Hue": {
+                "min": 100,
+                "max": 113
+            },
+            "Saturation": {
+                "min": 145,
+                "max": 169
+            },
+            "Value": {
+                "min": 225,
+                "max": 255
             }
         }
         
@@ -86,7 +120,7 @@
     }
     ],
     "camera_height": 3,
-    "camera_number": 0,
+    "camera_number": 1,
     "path_videos": "/home/emiliano/tesis/framework/videos/",
     "space" : {
         "height": 300.0,

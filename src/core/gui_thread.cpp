@@ -106,7 +106,7 @@ void gui_thread ( boost::shared_ptr<MessageServer> messageServer, boost::shared_
 	/*******************/
 
 	cv::namedWindow ( window_name, cv::WINDOW_AUTOSIZE );
-	cv::namedWindow ( morphology_name, cv::WINDOW_AUTOSIZE );
+	//cv::namedWindow ( morphology_name, cv::WINDOW_AUTOSIZE );
 	frame = videoProxy->readFrame();
 	morphology = videoProxy->readMorphology();
 
@@ -122,10 +122,10 @@ void gui_thread ( boost::shared_ptr<MessageServer> messageServer, boost::shared_
 
 	while ( !quit ) {
 		frame = videoProxy->readFrame();
-		morphology = videoProxy->readMorphology();
+		//morphology = videoProxy->readMorphology();
 
 		cv::imshow ( window_name, frame );
-		cv::imshow ( morphology_name, morphology );
+		//cv::imshow ( morphology_name, morphology );
 
 		if ( show_graphics && !frame.empty() ) {
 
@@ -382,8 +382,10 @@ void write_robot_info ( cv::Mat& frame, VectorPIDValues roll, VectorPIDValues pi
 	                            messageServer->getLong ( "robot/state", 0 ),
 	                            messageServer->get ( "gui/action/autocontrol", "false" ).c_str() );
 
-	string line6 = cv::format ( "%s",
-	                            messageServer->getBool ( "gui/grabar", false ) ? "REC" : "" );
+	string line6 = cv::format ( "%s  %s", 
+	                            messageServer->getBool ( "gui/grabar", false ) ? "REC" : "",
+								messageServer->getBool ( "robot/estabilizado", false ) ? "Estab." : "NO Estab."
+  							);
 
 	//string line6 = cv::format("tiempo chekpoint: %d", msChangeDestination);
 
