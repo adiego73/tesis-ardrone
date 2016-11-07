@@ -29,7 +29,7 @@ void camera_thread ( boost::shared_ptr<MessageServer> messageServer, boost::shar
 		messageServer->announce ( "camera/spots/" + std::to_string ( i ) + "/y" );
 		//messageServer->announce( "camera/destination/" + std::to_string( i ) + "/z" );
 		messageServer->announce ( "camera/spots/" + std::to_string ( i ) + "/id" );
-		messageServer->announce ( "camera/spots/" + std::to_string ( i ) + "/time" );
+		//messageServer->announce ( "camera/spots/" + std::to_string ( i ) + "/time" );
 		messageServer->announce ( "camera/spots/" + std::to_string ( i ) + "/comment" );
 	}
 
@@ -47,14 +47,14 @@ void camera_thread ( boost::shared_ptr<MessageServer> messageServer, boost::shar
 	last_robot_position.x = -1;
 	last_robot_position.y = -1;
 	last_robot_position.z = 0;
-
+	bool spotsFinds = false;
 	while ( !quit ) {
 		// I think this is the simplest way to pass the frame to the gui thread.
 		env->updateFrame ( videoData );
 		env->updateMorphology ( videoData );
 
-		if ( trackSpots >= 10 ) {
-			env->trackSpots();
+		if ( trackSpots >= 30 && !spotsFinds) {
+			spotsFinds = env->trackSpots();
 			spots = env->getSpots();
 			trackSpots = 0;
 
@@ -62,7 +62,7 @@ void camera_thread ( boost::shared_ptr<MessageServer> messageServer, boost::shar
 				messageServer->publish ( "camera/spots/" + std::to_string ( i ) + "/x", std::to_string ( spots.at ( i ).pos.x ) );
 				messageServer->publish ( "camera/spots/" + std::to_string ( i ) + "/y", std::to_string ( spots.at ( i ).pos.y ) );
  				messageServer->publish ( "camera/spots/" + std::to_string ( i ) + "/id", std::to_string ( spots.at ( i ).id ) );
-				messageServer->publish ( "camera/spots/" + std::to_string ( i ) + "/time", std::to_string ( spots.at ( i ).time ) );
+				//messageServer->publish ( "camera/spots/" + std::to_string ( i ) + "/time", std::to_string ( spots.at ( i ).time ) );
 				messageServer->publish ( "camera/spots/" + std::to_string ( i ) + "/comment", spots.at ( i ).comment );
 			}
 

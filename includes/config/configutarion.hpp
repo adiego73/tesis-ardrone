@@ -26,7 +26,7 @@ struct Size {
 struct Spot {
 	Color color;
 	int id;
-	float time;
+	//float time;
 	std::string comment;
 
 };
@@ -34,7 +34,7 @@ struct Spot {
 struct EnvironmentConfig {
 	std::vector< Spot > safe_spot;
 	std::vector< Color > unsafe_spot;
-	std::vector< Color > robot_id;
+	std::vector< Color > robot_spot;
 	//Color robot_id;
 	float camera_height;
 	int camera_number;

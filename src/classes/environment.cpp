@@ -11,7 +11,7 @@ Environment::Environment ( std::string config_path ) : next_destination ( 0 )
 	this->video_camera.reset ( new Video ( this->env_config.camera_number ) );
 }
 
-void Environment::trackSpots()
+bool Environment::trackSpots()
 {
 	for ( int i = 0; i < this->env_config.safe_spot.size(); i++ ) {
 		SafeSpot sp;
@@ -20,7 +20,7 @@ void Environment::trackSpots()
 		sp.pos = this->video_camera->trackColor ( destination.color );
 		sp.id = destination.id;
 		sp.comment = destination.comment;
-		sp.time = destination.time;
+		//sp.time = destination.time;
 
 		//color hardcodeado
 		/*if(i == 0)
@@ -52,6 +52,10 @@ void Environment::trackSpots()
 			}
 		}
 	}
+	if(this->safe_spots.size() ==  this->env_config.safe_spot.size())
+		return true;
+	else 
+		return false;
 }
 
 std::vector< SafeSpot > Environment::getSpots()
@@ -61,12 +65,13 @@ std::vector< SafeSpot > Environment::getSpots()
 
 Point Environment::trackRobotPosition()
 {
+
 	Point position;
 
-	if ( this->env_config.robot_id.size() == 2 )
-		position = this->video_camera->trackColor ( this->env_config.robot_id[0] );
-	else if ( this->env_config.robot_id.size() == 2 )
-		position = this->video_camera->trackColor ( this->env_config.robot_id[0], this->env_config.robot_id[1] );
+	if ( this->env_config.robot_spot.size() == 1 )
+		position = this->video_camera->trackColor ( this->env_config.robot_spot[0] );
+	else if ( this->env_config.robot_spot.size() == 2 )
+		position = this->video_camera->trackColor ( this->env_config.robot_spot[0], this->env_config.robot_spot[1] );
 
 	this->robot_position = position;
 
@@ -139,7 +144,7 @@ void Environment::updateFrame ( boost::shared_ptr< VideoData > videoProxy )
 {
 	this->video_camera->capture();
 
-	videoProxy->updateFrame ( this->video_camera->getFrame() );
+	videoProxy->updateFrame ( this->video_camera->getFrame());
 }
 
 void Environment::updateMorphology ( boost::shared_ptr< VideoData > videoProxy )

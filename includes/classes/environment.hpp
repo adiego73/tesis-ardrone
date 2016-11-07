@@ -16,7 +16,7 @@ typedef struct {
 
 	Point pos;
 	int id;
-	float time;
+	//float time;
 	std::string comment;
 
 } SafeSpot;
@@ -25,7 +25,7 @@ class Environment
 {
 public:
 	Point trackRobotPosition();
-	void trackSpots();
+	bool trackSpots();
 	//SafeSpot nextDestination();
 
 	Point getRobotPostionNormalized ( float robot_altitude );

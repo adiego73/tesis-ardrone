@@ -141,7 +141,7 @@ void gui_thread ( boost::shared_ptr<MessageServer> messageServer, boost::shared_
 			cv::imshow ( graphics_window_name, graphics_frame );
 
 			if ( bGrabar )
-				grabar ( robot_debug_frame, graphics_frame, morphology, outputVideo, outputVideo2, env->getVideosPath(), file_name );
+				grabar ( robot_debug_frame, graphics_frame, frame, outputVideo, outputVideo2, env->getVideosPath(), file_name );
 		}
 
 		int key_pressed = cv::waitKey ( 1 );
@@ -367,15 +367,18 @@ void write_robot_info ( cv::Mat& frame, VectorPIDValues roll, VectorPIDValues pi
 
 	
 
-	string line4 = cv::format ( "Destino: X: %.1f, Y: %.1f, Z: %.0fcm Dist: %d, Dx: %d, Dy: %d, Ang: %.2f, SPAng: %.2f",
+	string line4 = cv::format ( "Destino: X: %.1f, Y: %.1f, Z: %.0fcm, Tiempo: %d, Dist: %d, Dx: %d, Dy: %d",
 	                            messageServer->getFloat ( "rutina/destination/x", 0 ),
 								messageServer->getFloat ( "rutina/destination/y", 0 ),
 								messageServer->getFloat ( "rutina/destination/z", 0 ) / 10.0,
-	                            messageServer->getLong ( "robot/destino/dist/total", 0 ),
+	                            messageServer->getLong ( "rutina/destination/time", 0 ),
+	                            
+								messageServer->getLong ( "robot/destino/dist/total", 0 ),
 	                            messageServer->getLong ( "robot/destino/dist/x", 0 ),
-	                            messageServer->getLong ( "robot/destino/dist/y", 0 ),
-	                            messageServer->getFloat ( "robot/destino/angulo", 0. ),
-	                            messageServer->getFloat ( "robot/destino/setpointyaw", 0. ) );
+	                            messageServer->getLong ( "robot/destino/dist/y", 0 ));
+								
+	                            //messageServer->getFloat ( "robot/destino/angulo", 0. ),
+	                            //messageServer->getFloat ( "robot/destino/setpointyaw", 0. ) );
 
 	string line5 = cv::format ( "POSICION--> X: %.2f, Y: %.2f, Tierra: %s Estado: %d AutoControl: %s",
 	                            position.x, position.y, ( messageServer->getInt ( "robot/onground", 1 ) == 1 ) ? "Land" : "TakeOff",

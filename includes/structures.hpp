@@ -8,7 +8,7 @@
 #include <boost/smart_ptr.hpp>
 
 #include <opencv.hpp>
-
+#include "opencv2/core/ocl.hpp"
 #include "config/configutarion.hpp"
 
 namespace tesis

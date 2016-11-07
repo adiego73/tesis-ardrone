@@ -48,7 +48,7 @@ void EnvironmentConfiguration::parse()
 			robot_id.Saturation = r_saturation;
 			robot_id.Value = r_value;
 
-			config.robot_id.push_back ( robot_id );
+			config.robot_spot.push_back ( robot_id );
 		}
 
 		space_size.height = ptree.get<float> ( "space.height" );
@@ -70,7 +70,7 @@ void EnvironmentConfiguration::parse()
 			Range s_value;
 
 			s_spot.comment = child.get ( "Comment", "" );
-			s_spot.time = child.get ( "Tiempo", 0 );
+			//s_spot.time = child.get ( "Tiempo", 0 );
 			s_spot.id = child.get ( "Id", 0 );
 
 			s_hue.min = child.get ( "Hue.min", 0 );

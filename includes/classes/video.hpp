@@ -12,6 +12,7 @@ class Video
 public:
 	Point trackColor ( Color color );
 	Point trackColor ( Color color, Color color2 );
+	Point trackColor2 ( Color color, Color color2 );
 	cv::Mat getFrame();
 	cv::Mat getMorphology();
 	cv::Size getFrameSize();
@@ -36,6 +37,12 @@ private:
 	double dDistCoeffs[5];
 	cv::Mat intrinsic_matrix;
 	cv::Mat distCoeffs;
+	cv::Mat map1,map2;
+	cv::Mat newCamMatrix;
+	
+	long time;
+	std::vector <long>times;
+	
 };
 
 
