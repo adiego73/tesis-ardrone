@@ -199,6 +199,7 @@ Point Video::trackColor ( Color color )
 //	cv::bitwise_or ( frame_th, frame_th2, frame_th );
 	
 	cv::morphologyEx ( frame_th, frame_th2, CV_MOP_OPEN, morphKernel );
+	cv::morphologyEx ( frame_th2, frame_th2, CV_MOP_CLOSE, morphKernel );
 	cv::GaussianBlur(frame_th2, frame_th2, cv::Size ( 5, 5 ), 0, 0);
 	cv::Moments moments_1;
 	cv::Moments moments_2;
@@ -294,7 +295,10 @@ Point Video::trackColor ( Color color, Color color2 )
 	cv::bitwise_or ( frame_th, frame_th2, frame_th );
 	
 	cv::morphologyEx ( frame_th, frame_th2, CV_MOP_OPEN, morphKernel );
+	cv::morphologyEx ( frame_th2, frame_th2, CV_MOP_CLOSE, morphKernel );
 	cv::GaussianBlur(frame_th2, frame_th2, cv::Size ( 5, 5 ), 0, 0);
+	//morphology = frame_th2;
+	
 	cv::Moments moments_1;
 	cv::Moments moments_2;
 

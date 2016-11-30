@@ -108,7 +108,7 @@ void gui_thread ( boost::shared_ptr<MessageServer> messageServer, boost::shared_
 	cv::namedWindow ( window_name, cv::WINDOW_AUTOSIZE );
 	//cv::namedWindow ( morphology_name, cv::WINDOW_AUTOSIZE );
 	frame = videoProxy->readFrame();
-	morphology = videoProxy->readMorphology();
+	//morphology = videoProxy->readMorphology();
 
 
 	messageServer->announce ( "gui/action/takeoff" );
